@@ -4,6 +4,10 @@
 
 This smart contract is using the ERC721 standard
 
+# Deployment information
+
+This contract is deployed on Polygon Blockchhain at the address 0xfdea628f49897c49a8d7824ab286e236e42d4f8f
+
 # Additional public function:
 
 - setPublicUsername() Allow holders to register a name or username with their wallet address
