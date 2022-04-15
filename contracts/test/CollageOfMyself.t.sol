@@ -74,13 +74,13 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyself.totalSupply(), 5);
     }
 
-    function test_CollageOfMyself_cant_mint_if_paused() public {
-        assertEq(collageOfMyself.balanceOf(address(this)), 0);
-        assertEq(collageOfMyself.totalSupply(), 0);
+    // function test_CollageOfMyself_cant_mint_if_paused() public {
+    //     assertEq(collageOfMyself.balanceOf(address(this)), 0);
+    //     assertEq(collageOfMyself.totalSupply(), 0);
         
-        vm.expectRevert(abi.encode(string("Minting is paused")));
-        collageOfMyself.mint(1);
-    }
+    //     vm.expectRevert(abi.encode(string("Minting is paused")));
+    //     collageOfMyself.mint(1);
+    // }
 
     function test_CollageOfMyself_mint(address to, uint256 qty) public {
         vm.assume(to != address(0));
