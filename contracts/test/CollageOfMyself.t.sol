@@ -50,7 +50,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyself.mintCost(), TEST_mintCost);
     }
 
-    function test_CollageOfMyself_mintOne() public {
+    function test_CollageOfMyself_totalSupply_is_1_after_minting_1() public {
         assertEq(collageOfMyself.balanceOf(address(this)), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
         
@@ -61,6 +61,27 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyself.balanceOf(address(this)), 1);
         assertEq(collageOfMyself.totalSupply(), 1);
     }
+
+    function test_CollageOfMyself_mint_5() public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(5);
+
+        assertEq(collageOfMyself.balanceOf(address(this)), 5);
+        assertEq(collageOfMyself.totalSupply(), 5);
+    }
+
+    function test_CollageOfMyself_cant_mint_if_paused() public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        vm.expectRevert(abi.encode(string("Minting is paused")));
+        collageOfMyself.mint(1);
+    }
+
     function test_CollageOfMyself_mint(address to, uint256 qty) public {
         vm.assume(to != address(0));
         vm.assume(qty > 0 && qty <= collageOfMyself.maxMintAmount());
@@ -85,9 +106,147 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         console.log("qty", qty);
 
         collageOfMyself.mint{value: cost}(qty);
-        // _TEST_TOTALSUPPLY += qty;
 
         assertEq(collageOfMyself.balanceOf(to), qty);
         assertEq(collageOfMyself.totalSupply(), qty);
+    }
+
+    function test_CollageOfMyself_setPublicUsername() public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(1);
+        collageOfMyself.setPublicUsername("test");
+
+        assertEq(collageOfMyself.publicUsernameOfOwner(address(this)), "test");
+        assertEq(collageOfMyself.balanceOf(address(this)), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+    }
+
+    function test_CollageOfMyself_publicUsernameOfOwner_if_not_set() public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(1);
+
+        assertEq(collageOfMyself.publicUsernameOfOwner(address(this)), "");
+        assertEq(collageOfMyself.balanceOf(address(this)), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+    }
+
+    function test_CollageOfMyself_setPublicUsername_and_set_again() public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(1);
+        collageOfMyself.setPublicUsername("test");
+
+        assertEq(collageOfMyself.publicUsernameOfOwner(address(this)), "test");
+
+        collageOfMyself.setPublicUsername("bob");
+
+        assertEq(collageOfMyself.publicUsernameOfOwner(address(this)), "bob");
+        assertEq(collageOfMyself.balanceOf(address(this)), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+    }
+
+    function test_CollageOfMyself_setPublicUsername_fuzz(string calldata username) public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(1);
+        collageOfMyself.setPublicUsername(username);
+
+        assertEq(collageOfMyself.publicUsernameOfOwner(address(this)), username);
+        assertEq(collageOfMyself.balanceOf(address(this)), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+    }
+
+    function test_CollageOfMyself_transfer(address to) public {
+        vm.assume(to != address(0));
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        uint256 cost = collageOfMyself.mintCost();
+
+        collageOfMyself.mint(1);
+
+        assertEq(collageOfMyself.balanceOf(address(this)), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+
+        collageOfMyself.transferFrom(address(this), to, 1);
+        assertEq(collageOfMyself.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyself_transfer_fuzz(address from, address to) public {
+        vm.assume(from != address(0) && to != address(0));
+        assertEq(collageOfMyself.balanceOf(from), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        uint256 cost = collageOfMyself.mintCost();
+
+        (bool success, ) = payable(from).call{value: cost}("");
+        assertTrue(success);
+
+        vm.prank(from);
+        collageOfMyself.mint{value: cost}(1);
+
+        assertEq(collageOfMyself.balanceOf(from), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+
+        collageOfMyself.transferFrom(from, to, 1);
+        assertEq(collageOfMyself.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyself_mint3_and_walletOfOwner() public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(3);
+
+        assertEq(collageOfMyself.walletOfOwner(address(this)).length, 3);
+
+        assertEq(collageOfMyself.balanceOf(address(this)), 3);
+        assertEq(collageOfMyself.totalSupply(), 3);
+    }
+
+    function test_CollageOfMyself_tokenURI() public {
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(1);
+
+        assertEq(collageOfMyself.tokenURI(1), SetInitBaseURI);
+    }
+
+    function test_CollageOfMyself_setmaxMintAmount() public {
+        assertEq(collageOfMyself.maxMintAmount(), 20);
+        
+        uint256 newmaxMintAmount = 40;
+
+        collageOfMyself.setmaxMintAmount(newmaxMintAmount);
+        assertEq(collageOfMyself.maxMintAmount(), newmaxMintAmount);
+    }
+
+    function test_CollageOfMyself_setCost() public {
+        assertEq(collageOfMyself.mintCost(), TEST_mintCost);
+        
+        uint256 newCost = TEST_mintCost * 2;
+
+        collageOfMyself.setCost(newCost, newCost);
+        assertEq(collageOfMyself.mintCost(), newCost);
     }
 }
