@@ -1295,7 +1295,7 @@ abstract contract Ownable is Context {
     }
 }
 
-contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
+contract CollageOfMyself is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
     string baseURI;
@@ -1303,13 +1303,11 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
     uint256 public mintCost = 1 ether; // 1 MATIC
     uint256 public transferCost = 1 ether; // 1 MATIC to transfer a token to another account without using a approved exchange
     address public wmatic = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270; // W-MATIC contract address to be used for token transfers
-    address public bridge = address(0); // Bridge address
     uint256 public maxSupply = 500;
     uint256 public maxMintAmount = 20;
     bool public paused = true;
     bool public revealed = false;
     bool public applyTransferFee = false;
-    bool public mintOnlyByBridge = true;
     string public notRevealedUri;
     mapping(address => bool) public whitelist;
     mapping(address => string) private publicUsername;
@@ -1334,7 +1332,6 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         public 
         payable {
         uint256 supply = totalSupply();
-        require(!mintOnlyByBridge, "Minting only from bridge contract");
         require(!paused, "Minting is paused");
         require(_mintAmount > 0, "Mint amount must be greater than 0");
         require(_mintAmount <= maxMintAmount, "Mint amount must be less than or equal to 20");
@@ -1351,29 +1348,6 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         for (uint256 i = 1; i <= _mintAmount; i++) {
             _safeMint(msg.sender, supply + i);
         }
-    }
-
-    // Mint by bridge contract
-    function mintByBridge(uint256 _tokenId) 
-        public 
-        payable {
-        require(!paused, "Minting is paused");
-        require(
-            _tokenId > 0, 
-            "Token ID must be greater than 0"
-        );
-        require(bridge != address(0), "Bridge contract is not set");
-        require(bridge == msg.sender, "Only bridge contract can mint");
-        require(
-            _tokenId <= maxSupply, 
-            "Token ID must be less than or equal to 500"
-        );
-        require(
-            _tokenId == totalSupply() + 1, 
-            "Token ID must be equal to total supply + 1"
-        );
-        require(!_exists(_tokenId), "Token ID already exists");
-        _safeMint(msg.sender, _tokenId);
     }
 
     // Set your public username (example @twitter/username)
@@ -1457,7 +1431,7 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
                 "Not enough W-MATIC to transfer token"
             );
             require(
-                IERC20(wmatic).transferFrom(_from, address(this), transferCost), 
+                IERC20(wmatic).transfer(address(this), transferCost), 
                 "Failed to transfer W-MATIC"
             );
         }
@@ -1524,20 +1498,6 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         public 
         onlyOwner() {
         applyTransferFee = _eta;
-    }
-
-    // Set bridge contract
-    function setBridge(address _bridge) 
-        public 
-        onlyOwner() {
-        bridge = _bridge;
-    }
-
-    // Set mint only by mint contract
-    function setMintOnlyByMintContract(bool _eta) 
-        public 
-        onlyOwner() {
-        mintOnlyByBridge = _eta;
     }
 
     // Set baseURI folder address
