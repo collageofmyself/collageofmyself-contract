@@ -10,8 +10,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: NPM Clean Install
-        run: npm ci
+      - name: Yarn Install
+        run: yarn
       - name: Run All Hardhat Tests
         run: npx hardhat test
       - name: Run hardhat coverage on all Test

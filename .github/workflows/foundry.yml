@@ -14,7 +14,7 @@ jobs:
         uses: onbjerg/foundry-toolchain@v1
         with:
           version: nightly
-      - name: NPM Clean Install
-        run: npm ci
+      - name: Yarn Install
+        run: yarn
       - name: Run Forge Test
         run: forge test

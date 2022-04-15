@@ -26,7 +26,7 @@ This repository is build with Hardhat testing in mind, you can compile, run test
 ### Install Hardhat Dependencies
 
 ```commandline
-npm install
+yarn
 ```
 
 #### Run all tests with Hardhat
