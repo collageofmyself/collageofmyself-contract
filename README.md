@@ -26,19 +26,19 @@ This repository is build with Hardhat testing in mind, you can compile, run test
 ### Install Hardhat Dependencies
 
 ```commandline
-yarn
+    yarn
 ```
 
 #### Run all tests with Hardhat
 
 ```commandline
-npx hardhat test
+    npx hardhat test
 ```
 
-#### Run coverage test
+#### Run hardhat coverage test
 
 ```commandline
-npx hardhat coverage
+    npx hardhat coverage
 ```
 
 ## Foundry (Forge and Cast)
@@ -47,11 +47,9 @@ We started writting test with Foundry as well... (still in progress)
 
 [Foundry Documentation](https://book.getfoundry.sh/index.html)
 
-### Install Forge Dependencies
-
+### Run forge test
 
 ```commandline
-forge install https://github.com/foundry-rs/forge-std
+    forge test
 ```
-
 
