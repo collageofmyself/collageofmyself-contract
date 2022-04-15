@@ -1,14 +1,16 @@
-## Collage of Myself
+# Collage of Myself
 
-# Smart Contract
+## Smart Contract Information
 
 This smart contract is using the ERC721 standard
 
-# Deployment information
+### Deployment information
 
 This contract is deployed on Polygon Blockchhain at the address 0xfdea628f49897c49a8d7824ab286e236e42d4f8f
 
-# Additional public function:
+The bytecode deployed on Polygon Mainnet and Mumbai match 1:1 the contracts found in contractsDeploy/CollageOfMyself_polygon.sol
+
+### Additional public function:
 
 - setPublicUsername() Allow holders to register a name or username with their wallet address
 - walletOfOwner() List all nfts that a given address hold
@@ -16,8 +18,40 @@ This contract is deployed on Polygon Blockchhain at the address 0xfdea628f49897c
 - isWhitelisted() true/false if the address is whitelisted for transfer fee
 - validateTransfer() Confirm if the transfer between two address is subject to transfer fee
 
-# More about the transfer fee function
+## Hardhat Testing
 
-Currently the transfer fees are not activated on this contract, the main marketplace for Collage of Myself collection is OpenSea at the moment. 
-However we added the possibility to add and activate transfer fees as a contingency in case a lot of OTC deals take place or OpenSea becomes less popular.
+This repository is build with Hardhat testing in mind, you can compile, run test and verify coverage test.
+[Hardhat Documentation](https://hardhat.org/getting-started/)
+
+### Install Hardhat Dependencies
+
+```commandline
+yarn
+```
+
+#### Run all tests with Hardhat
+
+```commandline
+npx hardhat test
+```
+
+#### Run coverage test
+
+```commandline
+npx hardhat coverage
+```
+
+## Foundry (Forge and Cast)
+
+We started writting test with Foundry as well... (still in progress)
+
+[Foundry Documentation](https://book.getfoundry.sh/index.html)
+
+### Install Forge Dependencies
+
+
+```commandline
+forge install https://github.com/foundry-rs/forge-std
+```
+
 
