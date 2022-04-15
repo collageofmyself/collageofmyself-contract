@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 // import "hardhat/console.sol";
-import "forge-std/console.sol";
-import "forge-std/stdlib.sol";
-import "./libraries/ds-test/src/test.sol";
+import "./utils/console.sol";
+import "./utils/stdlib.sol";
+import "./utils/test.sol";
 import {CheatCodes} from "./utils/cheatcodes.sol";
 
 import { CollageOfMyself } from "../CollageOfMyself.sol";
