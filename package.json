@@ -2,13 +2,24 @@
   "name": "collageofmyself-contract",
   "version": "1.0.0",
   "main": "index.js",
+  "description": "A collage of 500 unique #NFT on  #Polygon to express yourself. #NFTpolygon",
   "repository": "https://github.com/collageofmyself/collageofmyself-contract.git",
   "author": "collageofmyself <collageofmyself@gmail.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/collageofmyself/collageofmyself-contrac/issues"
+  },
   "scripts": {
     "prettier": "npx prettier --write test/ && npx prettier --write scripts/",
     "flatten": "npx hardhat flatten contracts/collageOfMyself.sol > contractsFlatten/collageOfMyself.sol"
   },
+  "keywords": [
+    "nfts",
+    "solidity",
+    "hardhat",
+    "foudry",
+    "smart-contracts"
+  ],
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
     "@nomiclabs/hardhat-etherscan": "^3.0.0",
@@ -52,6 +63,6 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "hardhat-awesome-cli": "^0.0.6"
+    "hardhat-awesome-cli": "^0.0.8"
   }
 }
