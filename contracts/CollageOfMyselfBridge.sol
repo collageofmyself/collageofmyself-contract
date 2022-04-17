@@ -64,6 +64,12 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         require(reserved[msg.sender][_tokenId], "Token ID is reserved");
         require(!_exists(_tokenId), "Token ID already exists");
         state[_tokenId] = State.Minted;
+        if (msg.sender != owner()) {
+            require(
+                msg.value >= mintCost, 
+                "Insufficient funds for minting"
+            );
+        }
         _safeMint(msg.sender, _tokenId);
     }
 
@@ -182,6 +188,22 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         _safeTransfer(_from, _to, _tokenId, _data);
     }
 
+    // Return if a token is reserved
+    function isReserved(uint256 _tokenId) 
+        public 
+        view 
+        returns (bool) {
+        return state[_tokenId] == State.Reserved;
+    }
+    
+    // Return if a token is reserved for a owner
+    function isReserved(address _owner, uint256 _tokenId) 
+        public 
+        view 
+        returns (bool) {
+        return reserved[_owner][_tokenId];
+    }
+
     // Bridge
     // Reserve tokenId for owner
     function reserve(address _owner, uint256 _tokenId) 
@@ -234,13 +256,6 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         public 
         onlyOwner() {
         applyTransferFee = _eta;
-    }
-
-    // Set bridge contract
-    function setBridge(address _bridge) 
-        public 
-        onlyOwner() {
-        bridge = _bridge;
     }
 
     // Set baseURI folder address

@@ -11,6 +11,7 @@
   },
   "scripts": {
     "prettier": "npx prettier --write test/ && npx prettier --write scripts/",
+    "test": "npx hardhat test && npx hardhat coverage && forge test",
     "flatten": "npx hardhat flatten contracts/collageOfMyself.sol > contractsFlatten/collageOfMyself.sol"
   },
   "keywords": [
