@@ -74,13 +74,13 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyself.totalSupply(), 5);
     }
 
-    // function test_CollageOfMyself_cant_mint_if_paused() public {
-    //     assertEq(collageOfMyself.balanceOf(address(this)), 0);
-    //     assertEq(collageOfMyself.totalSupply(), 0);
+    function test_CollageOfMyself_cant_mint_if_paused() public {
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
         
-    //     vm.expectRevert(abi.encode(string("Minting is paused")));
-    //     collageOfMyself.mint(1);
-    // }
+        vm.expectRevert(bytes("Minting is paused"));
+        collageOfMyself.mint(1);
+    }
 
     function test_CollageOfMyself_mint(address to, uint256 qty) public {
         vm.assume(to != address(0));
@@ -170,7 +170,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyself.totalSupply(), 1);
     }
 
-    function test_CollageOfMyself_transfer(address to) public {
+    function test_CollageOfMyself_transferFrom(address to) public {
         vm.assume(to != address(0));
         assertEq(collageOfMyself.balanceOf(address(this)), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
@@ -188,7 +188,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyself.balanceOf(to), 1);
     }
 
-    function test_CollageOfMyself_transfer_fuzz(address from, address to) public {
+    function test_CollageOfMyself_transferFrom_fuzz(address from, address to) public {
         vm.assume(from != address(0) && to != address(0));
         assertEq(collageOfMyself.balanceOf(from), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
@@ -208,6 +208,96 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
         collageOfMyself.transferFrom(from, to, 1);
         assertEq(collageOfMyself.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyself_safeTransferFrom(address to) public {
+        vm.assume(to != address(0));
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        uint256 cost = collageOfMyself.mintCost();
+
+        collageOfMyself.mint(1);
+
+        assertEq(collageOfMyself.balanceOf(address(this)), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+
+        collageOfMyself.safeTransferFrom(address(this), to, 1);
+        assertEq(collageOfMyself.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyself_safeTransferFrom_fuzz(address from, address to) public {
+        vm.assume(from != address(0) && to != address(0));
+        assertEq(collageOfMyself.balanceOf(from), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        uint256 cost = collageOfMyself.mintCost();
+
+        (bool success, ) = payable(from).call{value: cost}("");
+        assertTrue(success);
+
+        vm.prank(from);
+        collageOfMyself.mint{value: cost}(1);
+
+        assertEq(collageOfMyself.balanceOf(from), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+
+        collageOfMyself.safeTransferFrom(from, to, 1);
+        assertEq(collageOfMyself.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyself_safeTransferFrom2(address to) public {
+        vm.assume(to != address(0));
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        uint256 cost = collageOfMyself.mintCost();
+
+        collageOfMyself.mint(1);
+
+        assertEq(collageOfMyself.balanceOf(address(this)), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+
+        collageOfMyself.safeTransferFrom(address(this), to, 1, "");
+        assertEq(collageOfMyself.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyself_safeTransferFrom2_fuzz(address from, address to) public {
+        vm.assume(from != address(0) && to != address(0));
+        assertEq(collageOfMyself.balanceOf(from), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        uint256 cost = collageOfMyself.mintCost();
+
+        (bool success, ) = payable(from).call{value: cost}("");
+        assertTrue(success);
+
+        vm.prank(from);
+        collageOfMyself.mint{value: cost}(1);
+
+        assertEq(collageOfMyself.balanceOf(from), 1);
+        assertEq(collageOfMyself.totalSupply(), 1);
+
+        collageOfMyself.safeTransferFrom(from, to, 1, "");
+        assertEq(collageOfMyself.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyself_setApprovalForAll() public {
+        collageOfMyself.pause(false);
+
+        collageOfMyself.mint(1);
+
+        collageOfMyself.setApprovalForAll(address(1), true);
+
+        assertTrue(collageOfMyself.isApprovedForAll(address(this), address(1)));
     }
 
     function test_CollageOfMyself_mint3_and_walletOfOwner() public {
