@@ -38,19 +38,19 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         return this.onERC721Received.selector;
     }
 
-    function test_CollageOfMyself_name() public {
+    function test_CollageOfMyselfBridge_name() public {
         assertEq(collageOfMyselfBridge.name(), SetInitTokenName);
     }
 
-    function test_CollageOfMyself_symbol() public {
+    function test_CollageOfMyselfBridge_symbol() public {
         assertEq(collageOfMyselfBridge.symbol(), SetInitTokenSymbol);
     }
 
-    function test_CollageOfMyself_mintCost() public {
+    function test_CollageOfMyselfBridge_mintCost() public {
         assertEq(collageOfMyselfBridge.mintCost(), TEST_mintCost);
     }
 
-    function test_CollageOfMyself_totalSupply_is_1_after_minting_1() public {
+    function test_CollageOfMyselfBridge_totalSupply_is_1_after_minting_1() public {
         assertEq(collageOfMyselfBridge.balanceOf(address(1)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -72,7 +72,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
     }
 
-    function test_CollageOfMyself_mint_5() public {
+    function test_CollageOfMyselfBridge_mint_5() public {
         assertEq(collageOfMyselfBridge.balanceOf(address(1)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -110,16 +110,16 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 5);
     }
 
-    // function test_CollageOfMyself_cant_mint_if_paused() public {
-    //     assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
-    //     assertEq(collageOfMyselfBridge.totalSupply(), 0);
+    function test_CollageOfMyselfBridge_cant_mint_if_paused() public {
+        assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
-    //     vm.expectRevert(abi.encode(string("Minting is paused")));
-    //     collageOfMyselfBridge.mint(1);
-    // }
+        vm.expectRevert(bytes("Minting is paused"));
+        collageOfMyselfBridge.mint(1);
+    }
 
 
-    function test_CollageOfMyself_mint(address to) public {
+    function test_CollageOfMyselfBridge_mint(address to) public {
         vm.assume(to != address(0));
 
         assertEq(collageOfMyselfBridge.balanceOf(address(to)), 0);
@@ -143,7 +143,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
     }
 
-    function test_CollageOfMyself_setPublicUsername() public {
+    function test_CollageOfMyselfBridge_setPublicUsername() public {
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -163,7 +163,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
     }
 
-    function test_CollageOfMyself_publicUsernameOfOwner_if_not_set() public {
+    function test_CollageOfMyselfBridge_publicUsernameOfOwner_if_not_set() public {
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -182,7 +182,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
     }
 
-    function test_CollageOfMyself_setPublicUsername_and_set_again() public {
+    function test_CollageOfMyselfBridge_setPublicUsername_and_set_again() public {
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -206,7 +206,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
     }
 
-    function test_CollageOfMyself_setPublicUsername_fuzz(string calldata username) public {
+    function test_CollageOfMyselfBridge_setPublicUsername_fuzz(string calldata username) public {
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -226,7 +226,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
     }
 
-    function test_CollageOfMyself_transfer(address to) public {
+    function test_CollageOfMyselfBridge_transferFrom(address to) public {
         vm.assume(to != address(0));
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
@@ -249,7 +249,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.balanceOf(to), 1);
     }
 
-    function test_CollageOfMyself_transfer_fuzz(address from, address to) public {
+    function test_CollageOfMyselfBridge_transferFrom_fuzz(address from, address to) public {
         vm.assume(from != address(0) && to != address(0));
         assertEq(collageOfMyselfBridge.balanceOf(from), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
@@ -277,7 +277,125 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.balanceOf(to), 1);
     }
 
-    function test_CollageOfMyself_mint3_and_walletOfOwner() public {
+    function test_CollageOfMyselfBridge_safeTransferFrom(address to) public {
+        vm.assume(to != address(0));
+        assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
+        
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(address(this), 1);
+
+        vm.prank(address(this));
+
+        collageOfMyselfBridge.mint(1);
+
+        assertEq(collageOfMyselfBridge.balanceOf(address(this)), 1);
+        assertEq(collageOfMyselfBridge.totalSupply(), 1);
+
+        collageOfMyselfBridge.safeTransferFrom(address(this), to, 1);
+        assertEq(collageOfMyselfBridge.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyselfBridge_safeTransferFrom_fuzz(address from, address to) public {
+        vm.assume(from != address(0) && to != address(0));
+        assertEq(collageOfMyselfBridge.balanceOf(from), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
+        
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(address(from), 1);
+
+        vm.prank(address(this));
+        uint256 cost = collageOfMyselfBridge.mintCost();
+
+        (bool success, ) = payable(from).call{value: cost}("");
+        assertTrue(success);
+
+        vm.prank(from);
+        collageOfMyselfBridge.mint{value: cost}(1);
+
+        assertEq(collageOfMyselfBridge.balanceOf(from), 1);
+        assertEq(collageOfMyselfBridge.totalSupply(), 1);
+
+        collageOfMyselfBridge.safeTransferFrom(from, to, 1);
+        assertEq(collageOfMyselfBridge.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyselfBridge_safeTransferFrom2(address to) public {
+        vm.assume(to != address(0));
+        assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
+        
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(address(this), 1);
+
+        vm.prank(address(this));
+
+        collageOfMyselfBridge.mint(1);
+
+        assertEq(collageOfMyselfBridge.balanceOf(address(this)), 1);
+        assertEq(collageOfMyselfBridge.totalSupply(), 1);
+
+        collageOfMyselfBridge.safeTransferFrom(address(this), to, 1, "");
+        assertEq(collageOfMyselfBridge.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyselfBridge_safeTransferFrom2_fuzz(address from, address to) public {
+        vm.assume(from != address(0) && to != address(0));
+        assertEq(collageOfMyselfBridge.balanceOf(from), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
+        
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(address(from), 1);
+
+        vm.prank(address(this));
+        uint256 cost = collageOfMyselfBridge.mintCost();
+
+        (bool success, ) = payable(from).call{value: cost}("");
+        assertTrue(success);
+
+        vm.prank(from);
+        collageOfMyselfBridge.mint{value: cost}(1);
+
+        assertEq(collageOfMyselfBridge.balanceOf(from), 1);
+        assertEq(collageOfMyselfBridge.totalSupply(), 1);
+
+        collageOfMyselfBridge.safeTransferFrom(from, to, 1, "");
+        assertEq(collageOfMyselfBridge.balanceOf(to), 1);
+    }
+
+    function test_CollageOfMyselfBridge_setApprovalForAll() public {
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(address(this), 1);
+
+        vm.prank(address(this));
+        collageOfMyselfBridge.mint(1);
+
+        collageOfMyselfBridge.setApprovalForAll(address(1), true);
+
+        assertTrue(collageOfMyselfBridge.isApprovedForAll(address(this), address(1)));
+    }
+
+    function test_CollageOfMyselfBridge_mint3_and_walletOfOwner() public {
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -305,7 +423,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.totalSupply(), 3);
     }
 
-    function test_CollageOfMyself_tokenURI() public {
+    function test_CollageOfMyselfBridge_tokenURI() public {
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -318,7 +436,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.tokenURI(1), SetInitBaseURI);
     }
 
-    function test_CollageOfMyself_setmaxMintAmount() public {
+    function test_CollageOfMyselfBridge_setmaxMintAmount() public {
         assertEq(collageOfMyselfBridge.maxMintAmount(), 20);
         
         uint256 newmaxMintAmount = 40;
@@ -327,7 +445,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.maxMintAmount(), newmaxMintAmount);
     }
 
-    function test_CollageOfMyself_setCost() public {
+    function test_CollageOfMyselfBridge_setCost() public {
         assertEq(collageOfMyselfBridge.mintCost(), TEST_mintCost);
         
         uint256 newCost = TEST_mintCost * 2;
