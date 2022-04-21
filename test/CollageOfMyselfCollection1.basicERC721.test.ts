@@ -1,6 +1,7 @@
 import { expect, use } from 'chai'
 import { solidity } from 'ethereum-waffle'
 import { ethers, waffle } from 'hardhat'
+// import { expectEvent, expectRevert, BN, time } from "@openzeppelin/test-helpers";
 import BigNumber from 'bignumber.js'
 import Chance from 'chance'
 import chalk from 'chalk'
@@ -26,7 +27,7 @@ Y8b  d8 '8b  d8' 88booo. 88booo. 88   88 88. ~8~ 88.        '8b  d8' 88         
 `)
 )
 
-describe('CollageOfMyself Contract', function () {
+describe('CollageOfMyself Contract - BasicERC721', function () {
   let CollageOfMyself: any
   let collageOfMyself: any
   let MockERC20: any
@@ -143,22 +144,6 @@ describe('CollageOfMyself Contract', function () {
 
       expect(await collageOfMyself.balanceOf(addr1.address)).to.be.equal(1)
       expect(await collageOfMyself.publicUsernameOfOwner(addr1.address)).to.equal('bob')
-    })
-
-    it('It should mint 1 nfts and return empty username', async function () {
-      await collageOfMyself.pause(false)
-      // Mint
-      await collageOfMyself.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
-
-      expect(await collageOfMyself.balanceOf(addr1.address)).to.be.equal(1)
-      expect(await collageOfMyself.publicUsernameOfOwner(addr1.address)).to.equal('')
-    })
-
-    it('It should return a empty string if account do not own nfts', async function () {
-      await collageOfMyself.pause(false)
-
-      expect(await collageOfMyself.balanceOf(addr1.address)).to.be.equal(0)
-      expect(await collageOfMyself.publicUsernameOfOwner(addr1.address)).to.equal('')
     })
   })
 
