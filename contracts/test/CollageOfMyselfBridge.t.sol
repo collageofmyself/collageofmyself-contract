@@ -61,52 +61,68 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         vm.prank(address(5));
         collageOfMyselfBridge.reserve(address(1), 1);
         
+        uint256 cost = collageOfMyselfBridge.mintCost();
+
         vm.prank(address(this));
-        (bool success, ) = payable(address(1)).call{value: collageOfMyselfBridge.mintCost()}("");
+        (bool success, ) = payable(address(1)).call{value: cost}("");
         assertTrue(success);
 
         vm.prank(address(1));
-        collageOfMyselfBridge.mint(1);
+        collageOfMyselfBridge.mint{value: cost}(1);
 
         assertEq(collageOfMyselfBridge.balanceOf(address(1)), 1);
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
     }
 
-    function test_CollageOfMyselfBridge_mint_5() public {
-        assertEq(collageOfMyselfBridge.balanceOf(address(1)), 0);
+    function test_CollageOfMyselfBridge_isReserved(address to, uint256 tokenId) public {
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(to, tokenId);
+
+        assertTrue(collageOfMyselfBridge.isReserved(tokenId));
+    }
+
+    function test_CollageOfMyselfBridge_isReserved2(address to, uint256 tokenId) public {
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(to, tokenId);
+
+        assertTrue(collageOfMyselfBridge.isReserved(to, tokenId));
+    }
+
+    function test_CollageOfMyselfBridge_mint_5(address to) public {
+        vm.assume(to != address(0));
+
+        assertEq(collageOfMyselfBridge.balanceOf(to), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
 
-        vm.prank(address(5));
-        collageOfMyselfBridge.reserve(address(1), 1);
-        vm.prank(address(5));
-        collageOfMyselfBridge.reserve(address(1), 2);
-        vm.prank(address(5));
-        collageOfMyselfBridge.reserve(address(1), 3);
-        vm.prank(address(5));
-        collageOfMyselfBridge.reserve(address(1), 4);
-        vm.prank(address(5));
-        collageOfMyselfBridge.reserve(address(1), 5);
+        for(uint256 i = 1; i <= 5; i++) {
+            vm.prank(address(5));
+            collageOfMyselfBridge.reserve(to, i);
+            assertTrue(collageOfMyselfBridge.isReserved(to, i));
+        }
+        uint256 cost = collageOfMyselfBridge.mintCost();
 
         vm.prank(address(this));
-        (bool success, ) = payable(address(1)).call{value: collageOfMyselfBridge.mintCost() * 5}("");
+        (bool success, ) = payable(to).call{value: cost * 6}("");
         assertTrue(success);
 
-        vm.prank(address(1));
-        collageOfMyselfBridge.mint(1);
-        vm.prank(address(1));
-        collageOfMyselfBridge.mint(2);
-        vm.prank(address(1));
-        collageOfMyselfBridge.mint(3);
-        vm.prank(address(1));
-        collageOfMyselfBridge.mint(4);
-        vm.prank(address(1));
-        collageOfMyselfBridge.mint(5);
+        for(uint256 i = 1; i <= 5; i++) {
+            vm.prank(address(to));
+            collageOfMyselfBridge.mint{value: cost}(i);
+        }
 
-        assertEq(collageOfMyselfBridge.balanceOf(address(1)), 5);
+        assertEq(collageOfMyselfBridge.balanceOf(to), 5);
         assertEq(collageOfMyselfBridge.totalSupply(), 5);
     }
 
@@ -116,6 +132,9 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         
         vm.expectRevert(bytes("Minting is paused"));
         collageOfMyselfBridge.mint(1);
+
+        assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
     }
 
 
@@ -134,13 +153,37 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
         uint256 cost = collageOfMyselfBridge.mintCost();
 
+        vm.prank(address(this));
         (bool success, ) = payable(to).call{value: cost}("");
+        assertTrue(success);
 
         vm.prank(address(to));
         collageOfMyselfBridge.mint{value: cost}(1);
 
         assertEq(collageOfMyselfBridge.balanceOf(address(to)), 1);
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
+    }
+
+    function test_CollageOfMyselfBridge_cant_mint_whithout_balance(address to) public {
+        vm.assume(to != address(0));
+
+        assertEq(collageOfMyselfBridge.balanceOf(to), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
+        
+        collageOfMyselfBridge.pause(false);
+
+        collageOfMyselfBridge.setBridgeAddress(address(5));
+
+        vm.prank(address(5));
+        collageOfMyselfBridge.reserve(address(to), 1);
+        
+
+        vm.prank(to);
+        vm.expectRevert(bytes("Insufficient funds for minting"));
+        collageOfMyselfBridge.mint(1);
+
+        assertEq(collageOfMyselfBridge.balanceOf(to), 0);
+        assertEq(collageOfMyselfBridge.totalSupply(), 0);
     }
 
     function test_CollageOfMyselfBridge_setPublicUsername() public {
@@ -302,6 +345,9 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
     function test_CollageOfMyselfBridge_safeTransferFrom_fuzz(address from, address to) public {
         vm.assume(from != address(0) && to != address(0));
+        address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", from, to, 1, "")));
+        // vm.assume(from != address(0) && to != address(0) && address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", from, to, 1, ""))).length != 0);
+
         assertEq(collageOfMyselfBridge.balanceOf(from), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         

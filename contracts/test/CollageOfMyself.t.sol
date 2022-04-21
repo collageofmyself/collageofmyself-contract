@@ -80,6 +80,9 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         
         vm.expectRevert(bytes("Minting is paused"));
         collageOfMyself.mint(1);
+
+        assertEq(collageOfMyself.balanceOf(address(this)), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
     }
 
     function test_CollageOfMyself_mint(address to, uint256 qty) public {
@@ -109,6 +112,22 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
         assertEq(collageOfMyself.balanceOf(to), qty);
         assertEq(collageOfMyself.totalSupply(), qty);
+    }
+
+    function test_CollageOfMyself_cant_mint_whithout_balance(address to) public {
+        vm.assume(to != address(0));
+
+        assertEq(collageOfMyself.balanceOf(to), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
+        
+        collageOfMyself.pause(false);
+
+        vm.prank(to);
+        vm.expectRevert(bytes("Insufficient funds for minting"));
+        collageOfMyself.mint(1);
+
+        assertEq(collageOfMyself.balanceOf(to), 0);
+        assertEq(collageOfMyself.totalSupply(), 0);
     }
 
     function test_CollageOfMyself_setPublicUsername() public {
