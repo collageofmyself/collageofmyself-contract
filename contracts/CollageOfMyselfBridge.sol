@@ -73,6 +73,17 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         _safeMint(msg.sender, _tokenId);
     }
 
+    // Put token back into minting pool to bridge
+    function bridgeToken(uint256 _tokenId) 
+        public {
+        require(_exists(_tokenId), "Token ID does not exist");
+        require(state[_tokenId] == State.Minted, "Token must be minted");
+        require(ownerOf(_tokenId) == msg.sender, "Only owner can bridge token");
+        state[_tokenId] = State.NotReserved;
+        reserved[msg.sender][_tokenId] = false;
+        _burn(_tokenId);
+    }
+
     // Set your public username (example @twitter/username)
     function setPublicUsername(string calldata _publicUsername) 
         public

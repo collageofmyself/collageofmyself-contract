@@ -172,6 +172,86 @@ describe('CollageOfMyselfBridge Contract', function () {
     })
   })
 
+  describe('Bridge Token', function () {
+    beforeEach(async function () {
+      await collageOfMyselfBridge.pause(false)
+      await collageOfMyselfBridge.setBridgeAddress(bridge.address)
+      await collageOfMyselfBridge.connect(bridge).reserve(owner.address, 1)
+      await collageOfMyselfBridge.connect(bridge).reserve(addr1.address, 2)
+      await collageOfMyselfBridge.connect(bridge).reserve(addr1.address, 3)
+      await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 4)
+      await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 5)
+    })
+
+    it('lets mint, then bridgeToken from owner', async function () {
+      // Mint
+      await collageOfMyselfBridge.mint(1)
+      // Bridge Token
+      await collageOfMyselfBridge.bridgeToken(1)
+
+      expect(await collageOfMyselfBridge.balanceOf(owner.address)).to.equal(0)
+    })
+
+    it('lets mint, then bridgeToken from addr1', async function () {
+      // Mint
+      await collageOfMyselfBridge.connect(addr1).mint(2, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(3, { value: ethers.utils.parseEther('1') })
+      // Bridge Token
+      await collageOfMyselfBridge.connect(addr1).bridgeToken(2)
+      await collageOfMyselfBridge.connect(addr1).bridgeToken(3)
+
+      expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.equal(0)
+    })
+
+    it('lets mint, then bridgeTokens from addr2', async function () {
+      // Mint
+      await collageOfMyselfBridge.connect(addr2).mint(4, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(5, { value: ethers.utils.parseEther('1') })
+      // Bridge Token
+      await collageOfMyselfBridge.connect(addr2).bridgeToken(4)
+      await collageOfMyselfBridge.connect(addr2).bridgeToken(5)
+
+      expect(await collageOfMyselfBridge.balanceOf(addr2.address)).to.equal(0)
+    })
+
+    it('lets mint, then bridgeToken from addr1, then mint again from addr2', async function () {
+      // Mint
+      await collageOfMyselfBridge.connect(addr1).mint(2, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(3, { value: ethers.utils.parseEther('1') })
+      // Bridge Token
+      await collageOfMyselfBridge.connect(addr1).bridgeToken(2)
+      await collageOfMyselfBridge.connect(addr1).bridgeToken(3)
+      // Reserved
+      await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 2)
+      await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 3)
+      // Mint
+      await collageOfMyselfBridge.connect(addr2).mint(2, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(3, { value: ethers.utils.parseEther('1') })
+
+      expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.equal(0)
+    })
+
+    it('lets mint, then bridgeToken from addr1, then mint again, then bridgeToken from addr2', async function () {
+      // Mint
+      await collageOfMyselfBridge.connect(addr1).mint(2, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(3, { value: ethers.utils.parseEther('1') })
+      // Bridge Token
+      await collageOfMyselfBridge.connect(addr1).bridgeToken(2)
+      await collageOfMyselfBridge.connect(addr1).bridgeToken(3)
+      // Reserved
+      await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 2)
+      await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 3)
+      // Mint
+      await collageOfMyselfBridge.connect(addr2).mint(2, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(3, { value: ethers.utils.parseEther('1') })
+      // Bridge Token
+      await collageOfMyselfBridge.connect(addr2).bridgeToken(2)
+      await collageOfMyselfBridge.connect(addr2).bridgeToken(3)
+
+      expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.equal(0)
+    })
+  })
+
   describe('Mint from Addr1', function () {
     beforeEach(async function () {
       await collageOfMyselfBridge.setBridgeAddress(bridge.address)
