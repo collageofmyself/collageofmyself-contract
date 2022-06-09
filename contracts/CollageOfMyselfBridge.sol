@@ -2,13 +2,13 @@
 
 pragma solidity 0.8.3;
 
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
-    using Strings for uint256;
+contract CollageOfMyselfBridge is ERC721EnumerableUpgradeable, OwnableUpgradeable {
+    using StringsUpgradeable for uint256;
 
     enum State {
         NotReserved,
@@ -39,12 +39,22 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         _;
     }
 
-    constructor(
-        string memory _initBaseURI,
-        string memory _initNotRevealedUri
-    ) ERC721("Collage of Myself", "MYSELF") {
-        setBaseURI(_initBaseURI);
-        setNotRevealedURI(_initNotRevealedUri);
+    /**
+     * @dev Initializes the contract setting the deployer as the initial owner.
+     */
+    function initialize(string memory initBaseURI_, string memory initNotRevealedUri_) external initializer {
+        __Ownable_init();
+        __CollageOfMyselfBridge_init(initBaseURI_, initNotRevealedUri_);
+    }
+
+    function __CollageOfMyselfBridge_init(string memory initBaseURI_, string memory initNotRevealedUri_) internal onlyInitializing {
+        __CollageOfMyselfBridge_init_unchained(initBaseURI_, initNotRevealedUri_);
+    }
+
+    function __CollageOfMyselfBridge_init_unchained(string memory initBaseURI_, string memory initNotRevealedUri_) internal onlyInitializing {
+        __ERC721_init("Collage of Myself", "MYSELF");
+        setBaseURI(initBaseURI_);
+        setNotRevealedURI(initNotRevealedUri_);
     }
 
     // internal
@@ -157,15 +167,15 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         returns (bool isValid) {
         if(applyTransferFee && !isWhitelisted(_from) && !isWhitelisted(_to) && !isWhitelisted(msg.sender)) {
             require(
-                IERC20(wmatic).allowance(_from, address(this)) >= transferCost, 
+                IERC20Upgradeable(wmatic).allowance(_from, address(this)) >= transferCost, 
                 "W-MATIC allowance too low for transfer fee"
             );
             require(
-                IERC20(wmatic).balanceOf(_from) >= transferCost, 
+                IERC20Upgradeable(wmatic).balanceOf(_from) >= transferCost, 
                 "Not enough W-MATIC to transfer token"
             );
             require(
-                IERC20(wmatic).transferFrom(_from, address(this), transferCost), 
+                IERC20Upgradeable(wmatic).transferFrom(_from, address(this), transferCost), 
                 "Failed to transfer W-MATIC"
             );
         }
@@ -317,10 +327,10 @@ contract CollageOfMyselfBridge is ERC721Enumerable, Ownable {
         public 
         onlyOwner() {
         bool success = 
-            IERC20(_tokenAddress)
+            IERC20Upgradeable(_tokenAddress)
                 .transfer(
                     msg.sender, 
-                    IERC20(_tokenAddress)
+                    IERC20Upgradeable(_tokenAddress)
                         .balanceOf(address(this)));
         require(success, "Failed to withdraw");
     }

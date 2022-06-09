@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 import "./utils/console.sol";
 import "./utils/stdlib.sol";
 import "./utils/test.sol";
-import {CheatCodes} from "./utils/cheatcodes.sol";
+import { CheatCodes } from "./utils/cheatcodes.sol";
 
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import { IERC721Receiver } from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 import { CollageOfMyselfBridge } from "../CollageOfMyselfBridge.sol";
 
@@ -26,7 +26,8 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
     function setUp() public {
         // Deploy contracts
-        collageOfMyselfBridge = new CollageOfMyselfBridge(SetInitNotRevealedUri, SetInitBaseURI);
+        collageOfMyselfBridge = new CollageOfMyselfBridge();
+        collageOfMyselfBridge.initialize(SetInitNotRevealedUri, SetInitBaseURI);
     }
 
     function onERC721Received(
@@ -140,6 +141,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
     function test_CollageOfMyselfBridge_mint(address to) public {
         vm.assume(to != address(0));
+        address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), to, 1, "")));
 
         assertEq(collageOfMyselfBridge.balanceOf(address(to)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
@@ -322,6 +324,8 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
     function test_CollageOfMyselfBridge_safeTransferFrom(address to) public {
         vm.assume(to != address(0));
+        address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), to, 1, "")));
+
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -376,6 +380,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
     function test_CollageOfMyselfBridge_safeTransferFrom2(address to) public {
         vm.assume(to != address(0));
+        address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), to, 1, "")));
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         
@@ -399,6 +404,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
     function test_CollageOfMyselfBridge_safeTransferFrom2_fuzz(address from, address to) public {
         vm.assume(from != address(0) && to != address(0));
+        address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", from, to, 1, "")));
         assertEq(collageOfMyselfBridge.balanceOf(from), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
         

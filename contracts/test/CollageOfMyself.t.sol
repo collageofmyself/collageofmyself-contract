@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 import "./utils/console.sol";
 import "./utils/stdlib.sol";
 import "./utils/test.sol";
-import {CheatCodes} from "./utils/cheatcodes.sol";
+import { CheatCodes } from "./utils/cheatcodes.sol";
 
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import { IERC721Receiver } from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 import { CollageOfMyself } from "../CollageOfMyself.sol";
 
@@ -86,7 +86,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_mint(address to, uint256 qty) public {
-        vm.assume(to != address(0));
+        vm.assume(to != address(0) && to != address(this));
         vm.assume(qty > 0 && qty <= collageOfMyself.maxMintAmount());
 
         assertEq(collageOfMyself.balanceOf(to), 0);
@@ -115,7 +115,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_cant_mint_whithout_balance(address to) public {
-        vm.assume(to != address(0));
+        vm.assume(to != address(0) && to != address(this));
 
         assertEq(collageOfMyself.balanceOf(to), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
@@ -128,6 +128,16 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
         assertEq(collageOfMyself.balanceOf(to), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
+    }
+
+    function test_CollageOfMyself_cant_querry_token0_2() public {
+        vm.expectRevert(bytes("ERC721: owner query for nonexistent token"));
+        collageOfMyself.ownerOf(0);
+    }
+
+    function test_CollageOfMyself_cant_querry_token0() public {
+        vm.expectRevert("ERC721: owner query for nonexistent token");
+        collageOfMyself.ownerOf(0);
     }
 
     function test_CollageOfMyself_setPublicUsername() public {
@@ -190,7 +200,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_transferFrom(address to) public {
-        vm.assume(to != address(0));
+        vm.assume(to != address(0) && to != address(this));
         assertEq(collageOfMyself.balanceOf(address(this)), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
         
@@ -208,7 +218,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_transferFrom_fuzz(address from, address to) public {
-        vm.assume(from != address(0) && to != address(0));
+        vm.assume(from != address(0) && to != address(0) && from != address(this) && to != address(this));
         assertEq(collageOfMyself.balanceOf(from), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
         
@@ -230,7 +240,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_safeTransferFrom(address to) public {
-        vm.assume(to != address(0));
+        vm.assume(to != address(0) && to != address(this));
         assertEq(collageOfMyself.balanceOf(address(this)), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
         
@@ -248,7 +258,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_safeTransferFrom_fuzz(address from, address to) public {
-        vm.assume(from != address(0) && to != address(0));
+        vm.assume(from != address(0) && to != address(0) && from != address(this) && to != address(this));
         assertEq(collageOfMyself.balanceOf(from), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
         
@@ -270,7 +280,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_safeTransferFrom2(address to) public {
-        vm.assume(to != address(0));
+        vm.assume(to != address(0) && to != address(this));
         assertEq(collageOfMyself.balanceOf(address(this)), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
         
@@ -288,7 +298,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_safeTransferFrom2_fuzz(address from, address to) public {
-        vm.assume(from != address(0) && to != address(0));
+        vm.assume(from != address(0) && to != address(0) && from != address(this) && to != address(this));
         assertEq(collageOfMyself.balanceOf(from), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
         
