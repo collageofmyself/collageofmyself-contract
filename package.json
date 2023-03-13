@@ -36,7 +36,7 @@
     "@types/figlet": "^1.5.4",
     "@types/inquirer": "^8.2.0",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^12.0.0",
+    "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "chai": "^4.2.0",
