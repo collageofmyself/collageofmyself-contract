@@ -40,7 +40,7 @@
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "chai": "^4.2.0",
-    "chalk": "4.1.2",
+    "chalk": "5.2.0",
     "chance": "^1.1.8",
     "dotenv": "^10.0.0",
     "eslint": "^7.29.0",
