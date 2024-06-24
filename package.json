@@ -29,7 +29,7 @@
     "@openzeppelin/contracts": "^4.5.0",
     "@openzeppelin/contracts-upgradeable": "^4.5.2",
     "@openzeppelin/hardhat-upgrades": "^1.16.1",
-    "@typechain/ethers-v5": "^10.0.0",
+    "@typechain/ethers-v5": "^11.0.0",
     "@typechain/hardhat": "^6.0.0",
     "@types/chai": "^4.2.21",
     "@types/chance": "^1.1.3",
