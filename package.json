@@ -55,7 +55,7 @@
     "hardhat": "^2.9.1",
     "hardhat-gas-reporter": "^1.0.4",
     "inquirer": "^8.2.1",
-    "prettier": "^2.6.1",
+    "prettier": "^3.0.0",
     "prettier-plugin-solidity": "^1.0.0-beta.13",
     "solhint": "^3.3.7",
     "solidity-coverage": "^0.8.0",
