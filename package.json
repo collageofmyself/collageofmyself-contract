@@ -61,7 +61,7 @@
     "solidity-coverage": "^0.8.0",
     "ts-node": "^10.1.0",
     "typechain": "^8.0.0",
-    "typescript": "^4.5.2"
+    "typescript": "^5.0.0"
   },
   "dependencies": {
     "hardhat-awesome-cli": "^0.1.0"
