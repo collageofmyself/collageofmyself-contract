@@ -1176,10 +1176,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/inquirer@^8.2.0":
-  version "8.2.6"
-  resolved "https://registry.yarnpkg.com/@types/inquirer/-/inquirer-8.2.6.tgz#abd41a5fb689c7f1acb12933d787d4262a02a0ab"
-  integrity sha512-3uT88kxg8lNzY8ay2ZjP44DKcRaTGztqeIvN2zHvhzIBH/uAPaL75aBtdNRKbA7xXoMbBt5kX0M00VKAnfOYlA==
+"@types/inquirer@^9.0.0":
+  version "9.0.7"
+  resolved "https://registry.yarnpkg.com/@types/inquirer/-/inquirer-9.0.7.tgz#61bb8d0e42f038b9a1738b08fba7fa98ad9b4b24"
+  integrity sha512-Q0zyBupO6NxGRZut/JdmqYKOnN95Eg5V8Csg3PGKkP+FnvsUZx1jAyK7fztIszxxMuoBA6E3KXWvdZVXIpx60g==
   dependencies:
     "@types/through" "*"
     rxjs "^7.2.0"
