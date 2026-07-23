@@ -16,13 +16,33 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     Vm public constant vm = Vm(HEVM_ADDRESS);
 
     CollageOfMyselfBridge private collageOfMyselfBridge;
-    
+
+    // Hardhat console precompile address — treated specially by Forge.
+    // Value-bearing calls to it revert, which would otherwise break fuzz tests.
+    address constant FORGE_CONSOLE = address(0x000000000000000000636F6e736F6c652e6c6f67);
+
     string constant SetInitNotRevealedUri = 'ipfs://';
     string constant SetInitBaseURI = 'ipfs://QmQ38J3nSHcJvnDWd4U7bm7mPir5S5UMjz8iMhYS8297rR/';
     string constant SetInitTokenName = 'Collage of Myself';
     string constant SetInitTokenSymbol = 'MYSELF';
 
     uint256 private TEST_mintCost = 1 ether;
+
+    /// @dev Restrict fuzz addresses to EOA-like addresses that can actually receive ETH
+    /// and interact with the token as a normal user would.
+    ///
+    /// Excludes:
+    /// - `address(0)` and `HEVM_ADDRESS` (Forge cheatcode dispatcher)
+    /// - `FORGE_CONSOLE` (the hardhat console precompile that Forge intercepts)
+    /// - addresses with code (would force `_safeMint` to look for an ERC721Receiver)
+    /// - the range `0x01..0x0B` (EVM precompiles, which never accept plain ETH)
+    function _assumeEOA(address addr) internal {
+        vm.assume(addr != address(0));
+        vm.assume(addr != FORGE_CONSOLE);
+        vm.assume(addr != HEVM_ADDRESS);
+        vm.assume(addr.code.length == 0);
+        vm.assume(uint160(addr) > 0x0A);
+    }
 
     function setUp() public {
         // Deploy contracts
@@ -97,11 +117,12 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyselfBridge_mint_5(address to) public {
-        vm.assume(to != address(0));
+        // `to` is the recipient of `_safeMint`, so restrict to EOAs.
+        _assumeEOA(to);
 
         assertEq(collageOfMyselfBridge.balanceOf(to), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -115,7 +136,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
         vm.prank(address(this));
         (bool success, ) = payable(to).call{value: cost * 6}("");
-        assertTrue(success);
+        require(success, "funding recipient failed");
 
         for(uint256 i = 1; i <= 5; i++) {
             vm.prank(address(to));
@@ -139,11 +160,12 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
 
     function test_CollageOfMyselfBridge_mint(address to) public {
-        vm.assume(to != address(0));
+        // `to` is the recipient of `_safeMint`, so restrict to EOAs.
+        _assumeEOA(to);
 
         assertEq(collageOfMyselfBridge.balanceOf(address(to)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -155,7 +177,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
         vm.prank(address(this));
         (bool success, ) = payable(to).call{value: cost}("");
-        assertTrue(success);
+        require(success, "funding recipient failed");
 
         vm.prank(address(to));
         collageOfMyselfBridge.mint{value: cost}(1);
@@ -165,11 +187,11 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyselfBridge_cant_mint_whithout_balance(address to) public {
-        vm.assume(to != address(0));
+        _assumeEOA(to);
 
         assertEq(collageOfMyselfBridge.balanceOf(to), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -293,10 +315,13 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyselfBridge_transferFrom_fuzz(address from, address to) public {
-        vm.assume(from != address(0) && to != address(0));
+        // `from` is the recipient of `_safeMint`, so restrict to EOAs.
+        _assumeEOA(from);
+        vm.assume(to != address(0));
+
         assertEq(collageOfMyselfBridge.balanceOf(from), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -308,7 +333,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         uint256 cost = collageOfMyselfBridge.mintCost();
 
         (bool success, ) = payable(from).call{value: cost}("");
-        assertTrue(success);
+        require(success, "funding sender failed");
 
         vm.prank(from);
         collageOfMyselfBridge.mint{value: cost}(1);
@@ -321,10 +346,12 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyselfBridge_safeTransferFrom(address to) public {
-        vm.assume(to != address(0));
+        // `to` is the recipient of `_safeTransfer`; restrict to EOAs.
+        _assumeEOA(to);
+
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -344,13 +371,13 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyselfBridge_safeTransferFrom_fuzz(address from, address to) public {
-        vm.assume(from != address(0) && to != address(0));
-        address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", from, to, 1, "")));
-        // vm.assume(from != address(0) && to != address(0) && address(this).call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", address(this), abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", from, to, 1, ""))).length != 0);
+        // Both are recipients of `_safeMint` / `_safeTransfer`; restrict to EOAs.
+        _assumeEOA(from);
+        _assumeEOA(to);
 
         assertEq(collageOfMyselfBridge.balanceOf(from), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -362,7 +389,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         uint256 cost = collageOfMyselfBridge.mintCost();
 
         (bool success, ) = payable(from).call{value: cost}("");
-        assertTrue(success);
+        require(success, "funding sender failed");
 
         vm.prank(from);
         collageOfMyselfBridge.mint{value: cost}(1);
@@ -375,10 +402,12 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyselfBridge_safeTransferFrom2(address to) public {
-        vm.assume(to != address(0));
+        // `to` is the recipient of `_safeTransfer`; restrict to EOAs.
+        _assumeEOA(to);
+
         assertEq(collageOfMyselfBridge.balanceOf(address(this)), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -398,10 +427,13 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyselfBridge_safeTransferFrom2_fuzz(address from, address to) public {
-        vm.assume(from != address(0) && to != address(0));
+        // Both are recipients of `_safeMint` / `_safeTransfer`; restrict to EOAs.
+        _assumeEOA(from);
+        _assumeEOA(to);
+
         assertEq(collageOfMyselfBridge.balanceOf(from), 0);
         assertEq(collageOfMyselfBridge.totalSupply(), 0);
-        
+
         collageOfMyselfBridge.pause(false);
 
         collageOfMyselfBridge.setBridgeAddress(address(5));
@@ -413,7 +445,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         uint256 cost = collageOfMyselfBridge.mintCost();
 
         (bool success, ) = payable(from).call{value: cost}("");
-        assertTrue(success);
+        require(success, "funding sender failed");
 
         vm.prank(from);
         collageOfMyselfBridge.mint{value: cost}(1);
