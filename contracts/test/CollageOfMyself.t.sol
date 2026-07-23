@@ -30,10 +30,18 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
 
     /// @dev Restrict fuzz addresses to EOA-like addresses that can actually receive ETH
     /// and interact with the token as a normal user would.
+    ///
+    /// Excludes:
+    /// - `address(0)` and `HEVM_ADDRESS` (Forge cheatcode dispatcher)
+    /// - `FORGE_CONSOLE` (the hardhat console precompile that Forge intercepts)
+    /// - addresses with code (would force `_safeMint` to look for an ERC721Receiver)
+    /// - the range `0x01..0x0B` (EVM precompiles, which never accept plain ETH)
     function _assumeEOA(address addr) internal {
         vm.assume(addr != address(0));
         vm.assume(addr != FORGE_CONSOLE);
+        vm.assume(addr != HEVM_ADDRESS);
         vm.assume(addr.code.length == 0);
+        vm.assume(uint160(addr) > 0x0A);
     }
 
     function setUp() public {
@@ -240,7 +248,9 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_safeTransferFrom(address to) public {
-        vm.assume(to != address(0));
+        // `to` is the recipient of `_safeTransfer`; restrict to EOAs.
+        _assumeEOA(to);
+
         assertEq(collageOfMyself.balanceOf(address(this)), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
 
@@ -283,7 +293,9 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
     }
 
     function test_CollageOfMyself_safeTransferFrom2(address to) public {
-        vm.assume(to != address(0));
+        // `to` is the recipient of `_safeTransfer`; restrict to EOAs.
+        _assumeEOA(to);
+
         assertEq(collageOfMyself.balanceOf(address(this)), 0);
         assertEq(collageOfMyself.totalSupply(), 0);
 
