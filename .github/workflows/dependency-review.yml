@@ -18,6 +18,6 @@ jobs:
           # deps that get flagged; surface them as PR comments but don't
           # block merges on low/moderate findings.
           fail-on-severity: high
-          fail-on-scopes: production
+          fail-on-scopes: runtime
           warn-only: true
           comment-summary-in-pr: on-failure
