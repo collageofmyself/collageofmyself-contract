@@ -1,63 +1,66 @@
 import * as dotenv from "dotenv";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import { HardhatUserConfig, task, subtask } from "hardhat/config";
-import { TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS } from "hardhat/builtin-tasks/task-names"
-import "hardhat-awesome-cli";
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-// import "hardhat-gas-reporter";
-import "solidity-coverage";
+import { defineConfig, task } from "hardhat/config";
 
-dotenv.config({ path: __dirname + '/.env.development' });
+import hardhatEthers from "@nomicfoundation/hardhat-ethers";
+import hardhatChaiMatchers from "@nomicfoundation/hardhat-ethers-chai-matchers";
+import hardhatMocha from "@nomicfoundation/hardhat-mocha";
 
-subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS)
-  .setAction(async (_, __, runSuper: any) => {
-    const paths = await runSuper();
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-    return paths.filter((p: any) => !p.endsWith(".t.sol"));
-  }
-);
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs: any, hre: any) => {
-  const accounts = await hre.ethers.getSigners();
+dotenv.config({ path: join(__dirname, ".env.development") });
 
-  for (const account of accounts) {
-    console.log(account.address);
-  }
-});
+// Local plugin that filters Foundry-style `.t.sol` files out of the Hardhat
+// build so we can keep Foundry's own test tree inside `contracts/test/`.
+const foundryTestFilter = {
+  id: "foundry-test-filter",
+  hookHandlers: {
+    solidity: () => import("./hardhat/hooks/exclude-foundry-tests.js"),
+  },
+};
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
+// `task()` uses the declarative builder API required by Hardhat 3. It is
+// registered via the `tasks` array so the plugin system can pick it up.
+const printAccounts = task("accounts", "Prints the list of accounts")
+  .setInlineAction(async (_taskArguments, hre) => {
+    const { provider } = await hre.network.create();
+    const accounts = (await provider.send("eth_accounts", [])) as string[];
+    for (const account of accounts) {
+      console.log(account);
+    }
+  })
+  .build();
 
-const config: HardhatUserConfig = {
+export default defineConfig({
+  plugins: [foundryTestFilter, hardhatEthers, hardhatChaiMatchers, hardhatMocha],
+  paths: {
+    sources: {
+      solidity: ["contracts"],
+    },
+  },
   solidity: {
     compilers: [
       {
-        version: '0.8.3',
+        version: "0.8.3",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200
-          }
-        }
+            runs: 200,
+          },
+        },
       },
       {
-        version: '0.8.12',
+        version: "0.8.12",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200
-          }
-        }
-      }
-    ]
+            runs: 200,
+          },
+        },
+      },
+    ],
   },
-  networks: {
-    hardhat: {
-    }
-  }
-};
-
-export default config;
+  tasks: [printAccounts],
+});
