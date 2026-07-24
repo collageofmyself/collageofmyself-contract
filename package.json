@@ -57,7 +57,7 @@
     "hardhat-gas-reporter": "^1.0.4",
     "inquirer": "^8.2.1",
     "mocha": "^11.0.0",
-    "prettier": "^2.6.1",
+    "prettier": "^3.0.0",
     "prettier-plugin-solidity": "^1.4.3",
     "solhint": "^3.3.7",
     "solidity-coverage": "^0.8.2",
