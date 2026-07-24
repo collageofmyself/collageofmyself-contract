@@ -55,7 +55,7 @@
     "ethers": "^6.0.0",
     "hardhat": "~3.11.0",
     "hardhat-gas-reporter": "^1.0.4",
-    "inquirer": "^8.2.1",
+    "inquirer": "^14.0.0",
     "mocha": "^11.0.0",
     "prettier": "^2.6.1",
     "prettier-plugin-solidity": "^1.4.3",
