@@ -1,12 +1,10 @@
-import { expect, use } from 'chai'
-import { solidity } from 'ethereum-waffle'
-import { ethers, waffle } from 'hardhat'
+import { expect } from 'chai'
+import { network } from 'hardhat'
 // import { expectEvent, expectRevert, BN, time } from "@openzeppelin/test-helpers";
 import BigNumber from 'bignumber.js'
 import Chance from 'chance'
 import chalk from 'chalk'
 import figlet from 'figlet'
-use(solidity)
 
 const ContractTitle = `CollageOfMyself`
 const ContractName = `Collage of Myself`
@@ -15,9 +13,10 @@ const ContractSymbol = `MYSELF`
 const SetInitNotRevealedUri = 'ipfs://'
 const SetInitBaseURI = 'ipfs://QmQ38J3nSHcJvnDWd4U7bm7mPir5S5UMjz8iMhYS8297rR/'
 
-const provider = waffle.provider
+let provider: any
 
 describe('CollageOfMyself Contract - Settings', function () {
+  let ethers: any
   let CollageOfMyself: any
   let collageOfMyself: any
   let MockERC20: any
@@ -28,11 +27,16 @@ describe('CollageOfMyself Contract - Settings', function () {
   let addr2: any
   let addr3: any
 
+  before(async function () {
+    ;({ ethers } = await network.create())
+    provider = ethers.provider
+  })
+
   beforeEach(async function () {
     ;[owner, addr1, addr2, addr3] = await ethers.getSigners()
     CollageOfMyself = await ethers.getContractFactory(ContractTitle)
     collageOfMyself = await CollageOfMyself.deploy(SetInitNotRevealedUri, SetInitBaseURI)
-    await collageOfMyself.deployed()
+    await collageOfMyself.waitForDeployment()
   })
 
   describe('Admin', function () {
@@ -40,22 +44,22 @@ describe('CollageOfMyself Contract - Settings', function () {
       await collageOfMyself.pause(false)
       // Mint
       await collageOfMyself.mint(2)
-      await collageOfMyself.connect(addr1).mint(2, { value: ethers.utils.parseEther('2') })
-      await collageOfMyself.connect(addr2).mint(3, { value: ethers.utils.parseEther('3') })
+      await collageOfMyself.connect(addr1).mint(2, { value: ethers.parseEther('2') })
+      await collageOfMyself.connect(addr2).mint(3, { value: ethers.parseEther('3') })
 
       expect(await collageOfMyself.balanceOf(owner.address)).to.equal(2)
       expect(await collageOfMyself.balanceOf(addr1.address)).to.equal(2)
       expect(await collageOfMyself.balanceOf(addr2.address)).to.equal(3)
 
       // Test contract received ether
-      expect(await provider.getBalance(collageOfMyself.address)).to.equal(ethers.utils.parseEther('5'))
+      expect(await provider.getBalance(collageOfMyself.target)).to.equal(ethers.parseEther('5'))
 
       // Deploy Mock ERC20
       MockERC20 = await ethers.getContractFactory('MockERC20')
       mockERC20 = await MockERC20.deploy()
-      await mockERC20.deployed()
+      await mockERC20.waitForDeployment()
 
-      await mockERC20.mint(owner.address, ethers.utils.parseEther('1000'))
+      await mockERC20.mint(owner.address, ethers.parseEther('1000'))
     })
 
     it('It should widthdraw', async function () {
@@ -73,9 +77,9 @@ describe('CollageOfMyself Contract - Settings', function () {
     })
 
     it('It should setWmatic', async function () {
-      await collageOfMyself.setWmatic(mockERC20.address)
+      await collageOfMyself.setWmatic(mockERC20.target)
 
-      expect(await collageOfMyself.wmatic()).to.be.equal(mockERC20.address)
+      expect(await collageOfMyself.wmatic()).to.be.equal(mockERC20.target)
     })
 
     it('It should setmaxMintAmount', async function () {
@@ -83,13 +87,13 @@ describe('CollageOfMyself Contract - Settings', function () {
 
       expect(await collageOfMyself.maxMintAmount()).to.be.equal(2)
 
-      await collageOfMyself.connect(addr1).mint(2, { value: ethers.utils.parseEther('2') })
+      await collageOfMyself.connect(addr1).mint(2, { value: ethers.parseEther('2') })
 
       expect(await collageOfMyself.balanceOf(addr1.address)).to.equal(4)
 
       let msg
       try {
-        await collageOfMyself.connect(addr2).mint(3, { value: ethers.utils.parseEther('3') })
+        await collageOfMyself.connect(addr2).mint(3, { value: ethers.parseEther('3') })
       } catch (error) {
         msg = 'Mint amount must be less than or equal to 20'
       }
@@ -98,23 +102,23 @@ describe('CollageOfMyself Contract - Settings', function () {
     })
 
     it('It should setCost', async function () {
-      await collageOfMyself.setCost(ethers.utils.parseEther('2'), ethers.utils.parseEther('1'))
+      await collageOfMyself.setCost(ethers.parseEther('2'), ethers.parseEther('1'))
 
-      expect(await collageOfMyself.mintCost()).to.be.equal(ethers.utils.parseEther('2'))
+      expect(await collageOfMyself.mintCost()).to.be.equal(ethers.parseEther('2'))
     })
 
     it('It should setApplyTransferFee', async function () {
-      await collageOfMyself.setWmatic(mockERC20.address)
+      await collageOfMyself.setWmatic(mockERC20.target)
 
-      expect(await collageOfMyself.wmatic()).to.be.equal(mockERC20.address)
+      expect(await collageOfMyself.wmatic()).to.be.equal(mockERC20.target)
 
-      await collageOfMyself.setCost(ethers.utils.parseEther('2'), ethers.utils.parseEther('1'))
+      await collageOfMyself.setCost(ethers.parseEther('2'), ethers.parseEther('1'))
 
-      expect(await collageOfMyself.transferCost()).to.be.equal(ethers.utils.parseEther('1'))
+      expect(await collageOfMyself.transferCost()).to.be.equal(ethers.parseEther('1'))
 
       await collageOfMyself.setApplyTransferFee(true)
 
-      await mockERC20.approve(collageOfMyself.address, ethers.utils.parseEther('200000'))
+      await mockERC20.approve(collageOfMyself.target, ethers.parseEther('200000'))
 
       let msg
       try {
@@ -134,11 +138,11 @@ describe('CollageOfMyself Contract - Settings', function () {
 
       expect(ownerWmaticBalance.toString()).to.equal('1000000000000000000000')
 
-      await mockERC20.transfer(collageOfMyself.address, ethers.utils.parseEther('1'))
+      await mockERC20.transfer(collageOfMyself.target, ethers.parseEther('1'))
 
-      expect(await mockERC20.balanceOf(collageOfMyself.address)).to.equal(ethers.utils.parseEther('1'))
+      expect(await mockERC20.balanceOf(collageOfMyself.target)).to.equal(ethers.parseEther('1'))
 
-      await collageOfMyself.withdrawERC20(mockERC20.address)
+      await collageOfMyself.withdrawERC20(mockERC20.target)
 
       expect((await mockERC20.balanceOf(owner.address)).toString()).to.equal('1000000000000000000000')
     })

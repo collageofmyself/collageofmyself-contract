@@ -1,11 +1,9 @@
-import { expect, use } from 'chai'
-import { solidity } from 'ethereum-waffle'
-import { ethers, waffle } from 'hardhat'
+import { expect } from 'chai'
+import { network } from 'hardhat'
 // import { expectEvent, expectRevert, BN, time } from "@openzeppelin/test-helpers";
 import BigNumber from 'bignumber.js'
 import Chance from 'chance'
 import chalk from 'chalk'
-use(solidity)
 
 const ContractTitle = `CollageOfMyselfBridge`
 const ContractName = `Collage of Myself`
@@ -14,9 +12,10 @@ const ContractSymbol = `MYSELF`
 const SetInitNotRevealedUri = 'ipfs://'
 const SetInitBaseURI = 'ipfs://QmQ38J3nSHcJvnDWd4U7bm7mPir5S5UMjz8iMhYS8297rR/'
 
-const provider = waffle.provider
+let provider: any
 
 describe('CollageOfMyselfBridge Contract', function () {
+  let ethers: any
   let CollageOfMyselfBridge: any
   let collageOfMyselfBridge: any
   let MockERC20: any
@@ -28,11 +27,16 @@ describe('CollageOfMyselfBridge Contract', function () {
   let addr3: any
   let bridge: any
 
+  before(async function () {
+    ;({ ethers } = await network.create())
+    provider = ethers.provider
+  })
+
   beforeEach(async function () {
     ;[owner, addr1, addr2, addr3, bridge] = await ethers.getSigners()
     CollageOfMyselfBridge = await ethers.getContractFactory(ContractTitle)
     collageOfMyselfBridge = await CollageOfMyselfBridge.deploy(SetInitNotRevealedUri, SetInitBaseURI)
-    await collageOfMyselfBridge.deployed()
+    await collageOfMyselfBridge.waitForDeployment()
   })
 
   describe('IERC165 && Ownable', function () {
@@ -41,19 +45,19 @@ describe('CollageOfMyselfBridge Contract', function () {
     })
 
     it('Support Interface IERC165', async function () {
-      expect(await collageOfMyselfBridge.supportsInterface(0x01ffc9a7)).to.equal(true)
+      expect(await collageOfMyselfBridge.supportsInterface('0x01ffc9a7')).to.equal(true)
     })
 
     it('Support Interface ERC721', async function () {
-      expect(await collageOfMyselfBridge.supportsInterface(0x80ac58cd)).to.equal(true)
+      expect(await collageOfMyselfBridge.supportsInterface('0x80ac58cd')).to.equal(true)
     })
 
     it('Support Interface ERC721Metadata', async function () {
-      expect(await collageOfMyselfBridge.supportsInterface(0x5b5e139f)).to.equal(true)
+      expect(await collageOfMyselfBridge.supportsInterface('0x5b5e139f')).to.equal(true)
     })
 
     it('Support Interface ERC721Enumerable', async function () {
-      expect(await collageOfMyselfBridge.supportsInterface(0x780e9d63)).to.equal(true)
+      expect(await collageOfMyselfBridge.supportsInterface('0x780e9d63')).to.equal(true)
     })
   })
 
@@ -184,7 +188,7 @@ describe('CollageOfMyselfBridge Contract', function () {
       expect(await collageOfMyselfBridge['isReserved(uint256)'](1)).to.equal(true)
       expect(await collageOfMyselfBridge['isReserved(address,uint256)'](addr1.address, 1)).to.equal(true)
       // Mint
-      await collageOfMyselfBridge.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(1, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.be.equal(1)
     })
@@ -196,7 +200,7 @@ describe('CollageOfMyselfBridge Contract', function () {
       expect(await collageOfMyselfBridge['isReserved(uint256)'](1)).to.equal(true)
       expect(await collageOfMyselfBridge['isReserved(address,uint256)'](addr1.address, 1)).to.equal(true)
       // Mint
-      await collageOfMyselfBridge.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(1, { value: ethers.parseEther('1') })
       await collageOfMyselfBridge.connect(addr1).setPublicUsername('bob')
 
       expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.be.equal(1)
@@ -215,8 +219,8 @@ describe('CollageOfMyselfBridge Contract', function () {
       await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 1)
       await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 2)
       // Mint
-      await collageOfMyselfBridge.connect(addr2).mint(1, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(2, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(1, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(2, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyselfBridge.balanceOf(addr2.address)).to.be.equal(2)
     })
@@ -228,9 +232,9 @@ describe('CollageOfMyselfBridge Contract', function () {
       await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 2)
       await collageOfMyselfBridge.connect(bridge).reserve(addr2.address, 3)
       // Mint
-      await collageOfMyselfBridge.connect(addr2).mint(1, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(2, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(3, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(1, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(2, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(3, { value: ethers.parseEther('1') })
       await collageOfMyselfBridge.connect(addr2).setPublicUsername('notBob')
 
       expect(await collageOfMyselfBridge.balanceOf(addr2.address)).to.be.equal(3)
@@ -248,7 +252,7 @@ describe('CollageOfMyselfBridge Contract', function () {
       // Reserve
       await collageOfMyselfBridge.connect(bridge).reserve(addr3.address, 1)
       // Mint
-      await collageOfMyselfBridge.connect(addr3).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr3).mint(1, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyselfBridge.balanceOf(addr3.address)).to.be.equal(1)
     })
@@ -258,7 +262,7 @@ describe('CollageOfMyselfBridge Contract', function () {
       // Reserve
       await collageOfMyselfBridge.connect(bridge).reserve(addr3.address, 1)
       // Mint
-      await collageOfMyselfBridge.connect(addr3).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr3).mint(1, { value: ethers.parseEther('1') })
       await collageOfMyselfBridge.connect(addr3).setPublicUsername('Lisa')
 
       expect(await collageOfMyselfBridge.balanceOf(addr3.address)).to.be.equal(1)
@@ -338,11 +342,11 @@ describe('CollageOfMyselfBridge Contract', function () {
       await collageOfMyselfBridge.mint(1)
       await collageOfMyselfBridge.mint(2)
       await collageOfMyselfBridge.mint(3)
-      await collageOfMyselfBridge.connect(addr1).mint(4, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr1).mint(5, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(6, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(7, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(8, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(4, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(5, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(6, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(7, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(8, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyselfBridge.balanceOf(owner.address)).to.equal(3)
       expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.equal(2)

@@ -1,12 +1,10 @@
-import { expect, use } from 'chai'
-import { solidity } from 'ethereum-waffle'
-import { ethers, waffle } from 'hardhat'
+import { expect } from 'chai'
+import { network } from 'hardhat'
 // import { expectEvent, expectRevert, BN, time } from "@openzeppelin/test-helpers";
 import BigNumber from 'bignumber.js'
 import Chance from 'chance'
 import chalk from 'chalk'
 import figlet from 'figlet'
-use(solidity)
 
 const ContractTitle = `CollageOfMyself`
 const ContractName = `Collage of Myself`
@@ -16,9 +14,10 @@ const SetInitNotRevealedUri = 'ipfs://'
 const SetInitBaseURI = 'ipfs://QmQ38J3nSHcJvnDWd4U7bm7mPir5S5UMjz8iMhYS8297rR/'
 const zeroAddress = '0x0000000000000000000000000000000000000000'
 
-const provider = waffle.provider
+let provider: any
 
 describe('CollageOfMyself Contract - Events', function () {
+  let ethers: any
   let CollageOfMyself: any
   let collageOfMyself: any
   let MockERC20: any
@@ -29,11 +28,16 @@ describe('CollageOfMyself Contract - Events', function () {
   let addr2: any
   let addr3: any
 
+  before(async function () {
+    ;({ ethers } = await network.create())
+    provider = ethers.provider
+  })
+
   beforeEach(async function () {
     ;[owner, addr1, addr2, addr3] = await ethers.getSigners()
     CollageOfMyself = await ethers.getContractFactory(ContractTitle)
     collageOfMyself = await CollageOfMyself.deploy(SetInitNotRevealedUri, SetInitBaseURI)
-    await collageOfMyself.deployed()
+    await collageOfMyself.waitForDeployment()
     await collageOfMyself.pause(false)
   })
 
@@ -43,35 +47,35 @@ describe('CollageOfMyself Contract - Events', function () {
       const receipt = await txn.wait()
 
       expect(await collageOfMyself.isApprovedForAll(addr1.address, owner.address)).to.equal(true)
-      expect(receipt.events.length).to.equal(1)
+      expect(receipt.logs.length).to.equal(1)
       await expect(txn).to.emit(collageOfMyself, 'ApprovalForAll').withArgs(addr1.address, owner.address, true)
     })
   })
 
   describe('Approval', function () {
     it('approve emit Approval event', async function () {
-      await collageOfMyself.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyself.connect(addr1).mint(1, { value: ethers.parseEther('1') })
       const txn = await collageOfMyself.connect(addr1).approve(owner.address, 1)
       const receipt = await txn.wait()
 
       expect(await collageOfMyself.getApproved(1)).to.equal(owner.address)
-      expect(receipt.events.length).to.equal(1)
+      expect(receipt.logs.length).to.equal(1)
       await expect(txn).to.emit(collageOfMyself, 'Approval').withArgs(addr1.address, owner.address, 1)
     })
   })
 
   describe('Transfer', function () {
     it('mint emit Transfer event', async function () {
-      const txn = await collageOfMyself.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
+      const txn = await collageOfMyself.connect(addr1).mint(1, { value: ethers.parseEther('1') })
       const receipt = await txn.wait()
 
       expect(await collageOfMyself.balanceOf(addr1.address)).to.equal(1)
-      expect(receipt.events.length).to.equal(1)
+      expect(receipt.logs.length).to.equal(1)
       await expect(txn).to.emit(collageOfMyself, 'Transfer').withArgs(zeroAddress, addr1.address, 1)
     })
 
     it('transferFrom emit Transfer event', async function () {
-      await collageOfMyself.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyself.connect(addr1).mint(1, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyself.balanceOf(addr1.address)).to.equal(1)
 
@@ -81,15 +85,15 @@ describe('CollageOfMyself Contract - Events', function () {
 
       expect(await collageOfMyself.balanceOf(addr1.address), 'addr1.address').to.equal(0)
       expect(await collageOfMyself.balanceOf(addr2.address), 'addr2.address').to.equal(1)
-      expect(receipt.events.length, 'receipt.events.length').to.equal(2)
-      await expect(txn, 'receipt.events.args.0').to
+      expect(receipt.logs.length, 'receipt.logs.length').to.equal(2)
+      await expect(txn, 'receipt.logs.args.0').to
         .emit(collageOfMyself, 'Approval').withArgs(addr1.address, zeroAddress, 1)
-      await expect(txn, 'receipt.events.args.1').to
+      await expect(txn, 'receipt.logs.args.1').to
         .emit(collageOfMyself, 'Transfer').withArgs(addr1.address, addr2.address, 1)
     })
 
     it('safeTransferFrom emit Transfer event', async function () {
-      await collageOfMyself.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyself.connect(addr1).mint(1, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyself.balanceOf(addr1.address)).to.equal(1)
 
@@ -99,15 +103,15 @@ describe('CollageOfMyself Contract - Events', function () {
 
       expect(await collageOfMyself.balanceOf(addr1.address), 'addr1.address').to.equal(0)
       expect(await collageOfMyself.balanceOf(addr2.address), 'addr2.address').to.equal(1)
-      expect(receipt.events.length, 'receipt.events.length').to.equal(2)
-      await expect(txn, 'receipt.events.args.0').to
+      expect(receipt.logs.length, 'receipt.logs.length').to.equal(2)
+      await expect(txn, 'receipt.logs.args.0').to
         .emit(collageOfMyself, 'Approval').withArgs(addr1.address, zeroAddress, 1)
-      await expect(txn, 'receipt.events.args.1').to
+      await expect(txn, 'receipt.logs.args.1').to
         .emit(collageOfMyself, 'Transfer').withArgs(addr1.address, addr2.address, 1)
     })
 
     it('safeTransferFrom emit Transfer event', async function () {
-      await collageOfMyself.connect(addr1).mint(1, { value: ethers.utils.parseEther('1') })
+      await collageOfMyself.connect(addr1).mint(1, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyself.balanceOf(addr1.address)).to.equal(1)
 
@@ -117,10 +121,10 @@ describe('CollageOfMyself Contract - Events', function () {
 
       expect(await collageOfMyself.balanceOf(addr1.address), 'addr1.address').to.equal(0)
       expect(await collageOfMyself.balanceOf(addr2.address), 'addr2.address').to.equal(1)
-      expect(receipt.events.length, 'receipt.events.length').to.equal(2)
-      await expect(txn, 'receipt.events.args.0').to
+      expect(receipt.logs.length, 'receipt.logs.length').to.equal(2)
+      await expect(txn, 'receipt.logs.args.0').to
         .emit(collageOfMyself, 'Approval').withArgs(addr1.address, zeroAddress, 1)
-      await expect(txn, 'receipt.events.args.1').to
+      await expect(txn, 'receipt.logs.args.1').to
         .emit(collageOfMyself, 'Transfer').withArgs(addr1.address, addr2.address, 1)
     })
   })
@@ -131,7 +135,7 @@ describe('CollageOfMyself Contract - Events', function () {
       const receipt = await txn.wait()
 
       expect(await collageOfMyself.owner()).to.equal(addr1.address)
-      expect(receipt.events.length).to.equal(1)
+      expect(receipt.logs.length).to.equal(1)
       await expect(txn).to.emit(collageOfMyself, 'OwnershipTransferred').withArgs(owner.address, addr1.address)
     })
 
@@ -140,7 +144,7 @@ describe('CollageOfMyself Contract - Events', function () {
       const receipt = await txn.wait()
 
       expect(await collageOfMyself.owner()).to.equal(zeroAddress)
-      expect(receipt.events.length).to.equal(1)
+      expect(receipt.logs.length).to.equal(1)
       await expect(txn).to.emit(collageOfMyself, 'OwnershipTransferred').withArgs(owner.address, zeroAddress)
     })
   })

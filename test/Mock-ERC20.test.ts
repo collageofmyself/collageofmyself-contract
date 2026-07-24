@@ -1,15 +1,20 @@
 import { expect } from 'chai'
-import { ethers } from 'hardhat'
+import { network } from 'hardhat'
 
 let mockERC20: any
 let deployer: any
+let ethers: any
 
 describe('MockERC20', async function () {
+  before(async function () {
+    ;({ ethers } = await network.create())
+  })
+
   beforeEach(async function () {
     ;[deployer] = await ethers.getSigners()
     const MockERC20 = await ethers.getContractFactory('MockERC20')
     mockERC20 = await MockERC20.deploy()
-    await mockERC20.deployed()
+    await mockERC20.waitForDeployment()
   })
 
   it('Should return the name of the token', async function () {

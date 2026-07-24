@@ -15,4 +15,4 @@ jobs:
       - name: Run All Hardhat Tests
         run: npx hardhat test
       - name: Run hardhat coverage on all Test
-        run: npx hardhat coverage
+        run: npx hardhat test --coverage

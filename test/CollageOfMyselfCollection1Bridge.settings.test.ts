@@ -1,11 +1,9 @@
-import { expect, use } from 'chai'
-import { solidity } from 'ethereum-waffle'
-import { ethers, waffle } from 'hardhat'
+import { expect } from 'chai'
+import { network } from 'hardhat'
 // import { expectEvent, expectRevert, BN, time } from "@openzeppelin/test-helpers";
 import BigNumber from 'bignumber.js'
 import Chance from 'chance'
 import chalk from 'chalk'
-use(solidity)
 
 const ContractTitle = `CollageOfMyselfBridge`
 const ContractName = `Collage of Myself`
@@ -14,9 +12,10 @@ const ContractSymbol = `MYSELF`
 const SetInitNotRevealedUri = 'ipfs://'
 const SetInitBaseURI = 'ipfs://QmQ38J3nSHcJvnDWd4U7bm7mPir5S5UMjz8iMhYS8297rR/'
 
-const provider = waffle.provider
+let provider: any
 
 describe('CollageOfMyselfBridge Contract', function () {
+  let ethers: any
   let CollageOfMyselfBridge: any
   let collageOfMyselfBridge: any
   let MockERC20: any
@@ -28,11 +27,16 @@ describe('CollageOfMyselfBridge Contract', function () {
   let addr3: any
   let bridge: any
 
+  before(async function () {
+    ;({ ethers } = await network.create())
+    provider = ethers.provider
+  })
+
   beforeEach(async function () {
     ;[owner, addr1, addr2, addr3, bridge] = await ethers.getSigners()
     CollageOfMyselfBridge = await ethers.getContractFactory(ContractTitle)
     collageOfMyselfBridge = await CollageOfMyselfBridge.deploy(SetInitNotRevealedUri, SetInitBaseURI)
-    await collageOfMyselfBridge.deployed()
+    await collageOfMyselfBridge.waitForDeployment()
   })
 
   describe('Admin', function () {
@@ -50,25 +54,25 @@ describe('CollageOfMyselfBridge Contract', function () {
       // Mint
       await collageOfMyselfBridge.mint(1)
       await collageOfMyselfBridge.mint(2)
-      await collageOfMyselfBridge.connect(addr1).mint(3, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr1).mint(4, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(5, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(6, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr2).mint(7, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(3, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(4, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(5, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(6, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr2).mint(7, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyselfBridge.balanceOf(owner.address)).to.equal(2)
       expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.equal(2)
       expect(await collageOfMyselfBridge.balanceOf(addr2.address)).to.equal(3)
 
       // Test contract received ether
-      expect(await provider.getBalance(collageOfMyselfBridge.address)).to.equal(ethers.utils.parseEther('5'))
+      expect(await provider.getBalance(collageOfMyselfBridge.target)).to.equal(ethers.parseEther('5'))
 
       // Deploy Mock ERC20
       MockERC20 = await ethers.getContractFactory('MockERC20')
       mockERC20 = await MockERC20.deploy()
-      await mockERC20.deployed()
+      await mockERC20.waitForDeployment()
 
-      await mockERC20.mint(owner.address, ethers.utils.parseEther('1000'))
+      await mockERC20.mint(owner.address, ethers.parseEther('1000'))
     })
 
     it('It should widthdraw', async function () {
@@ -86,9 +90,9 @@ describe('CollageOfMyselfBridge Contract', function () {
     })
 
     it('It should setWmatic', async function () {
-      await collageOfMyselfBridge.setWmatic(mockERC20.address)
+      await collageOfMyselfBridge.setWmatic(mockERC20.target)
 
-      expect(await collageOfMyselfBridge.wmatic()).to.be.equal(mockERC20.address)
+      expect(await collageOfMyselfBridge.wmatic()).to.be.equal(mockERC20.target)
     })
 
     it('It should setMaxMintAmount', async function () {
@@ -99,14 +103,14 @@ describe('CollageOfMyselfBridge Contract', function () {
       await collageOfMyselfBridge.connect(bridge).reserve(addr1.address, 8)
       await collageOfMyselfBridge.connect(bridge).reserve(addr1.address, 9)
       // Mint
-      await collageOfMyselfBridge.connect(addr1).mint(8, { value: ethers.utils.parseEther('1') })
-      await collageOfMyselfBridge.connect(addr1).mint(9, { value: ethers.utils.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(8, { value: ethers.parseEther('1') })
+      await collageOfMyselfBridge.connect(addr1).mint(9, { value: ethers.parseEther('1') })
 
       expect(await collageOfMyselfBridge.balanceOf(addr1.address)).to.equal(4)
 
       let msg
       try {
-        await collageOfMyselfBridge.connect(addr2).mint(3, { value: ethers.utils.parseEther('3') })
+        await collageOfMyselfBridge.connect(addr2).mint(3, { value: ethers.parseEther('3') })
       } catch (error) {
         msg = 'Mint amount must be less than or equal to 20'
       }
@@ -115,23 +119,23 @@ describe('CollageOfMyselfBridge Contract', function () {
     })
 
     it('It should setCost', async function () {
-      await collageOfMyselfBridge.setCost(ethers.utils.parseEther('2'), ethers.utils.parseEther('1'))
+      await collageOfMyselfBridge.setCost(ethers.parseEther('2'), ethers.parseEther('1'))
 
-      expect(await collageOfMyselfBridge.mintCost()).to.be.equal(ethers.utils.parseEther('2'))
+      expect(await collageOfMyselfBridge.mintCost()).to.be.equal(ethers.parseEther('2'))
     })
 
     it('It should setApplyTransferFee', async function () {
-      await collageOfMyselfBridge.setWmatic(mockERC20.address)
+      await collageOfMyselfBridge.setWmatic(mockERC20.target)
 
-      expect(await collageOfMyselfBridge.wmatic()).to.be.equal(mockERC20.address)
+      expect(await collageOfMyselfBridge.wmatic()).to.be.equal(mockERC20.target)
 
-      await collageOfMyselfBridge.setCost(ethers.utils.parseEther('2'), ethers.utils.parseEther('1'))
+      await collageOfMyselfBridge.setCost(ethers.parseEther('2'), ethers.parseEther('1'))
 
-      expect(await collageOfMyselfBridge.transferCost()).to.be.equal(ethers.utils.parseEther('1'))
+      expect(await collageOfMyselfBridge.transferCost()).to.be.equal(ethers.parseEther('1'))
 
       await collageOfMyselfBridge.setApplyTransferFee(true)
 
-      await mockERC20.approve(collageOfMyselfBridge.address, ethers.utils.parseEther('200000'))
+      await mockERC20.approve(collageOfMyselfBridge.target, ethers.parseEther('200000'))
 
       await collageOfMyselfBridge.transferFrom(owner.address, addr1.address, 1)
 
@@ -144,11 +148,11 @@ describe('CollageOfMyselfBridge Contract', function () {
 
       expect(ownerWmaticBalance.toString()).to.equal('1000000000000000000000')
 
-      await mockERC20.transfer(collageOfMyselfBridge.address, ethers.utils.parseEther('1'))
+      await mockERC20.transfer(collageOfMyselfBridge.target, ethers.parseEther('1'))
 
-      expect(await mockERC20.balanceOf(collageOfMyselfBridge.address)).to.equal(ethers.utils.parseEther('1'))
+      expect(await mockERC20.balanceOf(collageOfMyselfBridge.target)).to.equal(ethers.parseEther('1'))
 
-      await collageOfMyselfBridge.withdrawERC20(mockERC20.address)
+      await collageOfMyselfBridge.withdrawERC20(mockERC20.target)
 
       expect((await mockERC20.balanceOf(owner.address)).toString()).to.equal('1000000000000000000000')
     })
