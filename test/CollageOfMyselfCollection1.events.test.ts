@@ -85,10 +85,9 @@ describe('CollageOfMyself Contract - Events', function () {
 
       expect(await collageOfMyself.balanceOf(addr1.address), 'addr1.address').to.equal(0)
       expect(await collageOfMyself.balanceOf(addr2.address), 'addr2.address').to.equal(1)
-      expect(receipt.logs.length, 'receipt.logs.length').to.equal(2)
+      // OZ 4.8+ no longer emits an Approval event when transfer clears approval
+      expect(receipt.logs.length, 'receipt.logs.length').to.equal(1)
       await expect(txn, 'receipt.logs.args.0').to
-        .emit(collageOfMyself, 'Approval').withArgs(addr1.address, zeroAddress, 1)
-      await expect(txn, 'receipt.logs.args.1').to
         .emit(collageOfMyself, 'Transfer').withArgs(addr1.address, addr2.address, 1)
     })
 
@@ -103,10 +102,9 @@ describe('CollageOfMyself Contract - Events', function () {
 
       expect(await collageOfMyself.balanceOf(addr1.address), 'addr1.address').to.equal(0)
       expect(await collageOfMyself.balanceOf(addr2.address), 'addr2.address').to.equal(1)
-      expect(receipt.logs.length, 'receipt.logs.length').to.equal(2)
+      // OZ 4.8+ no longer emits an Approval event when transfer clears approval
+      expect(receipt.logs.length, 'receipt.logs.length').to.equal(1)
       await expect(txn, 'receipt.logs.args.0').to
-        .emit(collageOfMyself, 'Approval').withArgs(addr1.address, zeroAddress, 1)
-      await expect(txn, 'receipt.logs.args.1').to
         .emit(collageOfMyself, 'Transfer').withArgs(addr1.address, addr2.address, 1)
     })
 
@@ -121,10 +119,9 @@ describe('CollageOfMyself Contract - Events', function () {
 
       expect(await collageOfMyself.balanceOf(addr1.address), 'addr1.address').to.equal(0)
       expect(await collageOfMyself.balanceOf(addr2.address), 'addr2.address').to.equal(1)
-      expect(receipt.logs.length, 'receipt.logs.length').to.equal(2)
+      // OZ 4.8+ no longer emits an Approval event when transfer clears approval
+      expect(receipt.logs.length, 'receipt.logs.length').to.equal(1)
       await expect(txn, 'receipt.logs.args.0').to
-        .emit(collageOfMyself, 'Approval').withArgs(addr1.address, zeroAddress, 1)
-      await expect(txn, 'receipt.logs.args.1').to
         .emit(collageOfMyself, 'Transfer').withArgs(addr1.address, addr2.address, 1)
     })
   })
