@@ -341,6 +341,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.balanceOf(from), 1);
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
 
+        vm.prank(from);
         collageOfMyselfBridge.transferFrom(from, to, 1);
         assertEq(collageOfMyselfBridge.balanceOf(to), 1);
     }
@@ -397,6 +398,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.balanceOf(from), 1);
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
 
+        vm.prank(from);
         collageOfMyselfBridge.safeTransferFrom(from, to, 1);
         assertEq(collageOfMyselfBridge.balanceOf(to), 1);
     }
@@ -453,6 +455,7 @@ contract CollageOfMyselfTest is DSTest, IERC721Receiver  {
         assertEq(collageOfMyselfBridge.balanceOf(from), 1);
         assertEq(collageOfMyselfBridge.totalSupply(), 1);
 
+        vm.prank(from);
         collageOfMyselfBridge.safeTransferFrom(from, to, 1, "");
         assertEq(collageOfMyselfBridge.balanceOf(to), 1);
     }
