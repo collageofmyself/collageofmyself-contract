@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.3;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -27,7 +27,7 @@ contract CollageOfMyself is ERC721Enumerable, Ownable {
     constructor(
         string memory _initBaseURI,
         string memory _initNotRevealedUri
-    ) ERC721("Collage of Myself", "MYSELF") {
+    ) ERC721("Collage of Myself", "MYSELF") Ownable(msg.sender) {
         setBaseURI(_initBaseURI);
         setNotRevealedURI(_initNotRevealedUri);
     }
@@ -96,7 +96,7 @@ contract CollageOfMyself is ERC721Enumerable, Ownable {
         override
         returns (string memory) {
         require(
-            _exists(_tokenId),
+            _ownerOf(_tokenId) != address(0),
             "ERC721Metadata: URI query for nonexistent token"
         );
         
@@ -153,28 +153,24 @@ contract CollageOfMyself is ERC721Enumerable, Ownable {
         return true;
     }
 
-    // Add transfer fee to the transfer if activated and not whitelisted
-    function transferFrom(address _from, address _to, uint256 _tokenId) 
-        public 
-        override {
-        require(validateTransfer(_from, _to), "Transfer failed");
-        _transfer(_from, _to, _tokenId);
-    }
-
-    // Add transfer fee to the transfer if activated and not whitelisted
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) 
-        public 
-        override {
-        require(validateTransfer(_from, _to), "Transfer failed");
-        safeTransferFrom(_from, _to, _tokenId, "");
-    }
-
-    // Add transfer fee to the transfer if activated and not whitelisted
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) 
-        public 
-        override {
-        require(validateTransfer(_from, _to), "Transfer failed");
-        _safeTransfer(_from, _to, _tokenId, _data);
+    // Add transfer fee to the transfer if activated and not whitelisted.
+    // Override the internal `_update` hook (introduced in OpenZeppelin v5) so the
+    // fee/username-clearing logic is applied uniformly across `transferFrom`,
+    // `safeTransferFrom`, and any future transfer path. Mints and burns (where
+    // `from` or `to` is the zero address) bypass the validation, matching the
+    // v4 behaviour where `validateTransfer` was only invoked from public
+    // transfer functions.
+    function _update(address to, uint256 tokenId, address auth)
+        internal
+        virtual
+        override
+        returns (address)
+    {
+        address from = _ownerOf(tokenId);
+        if (from != address(0) && to != address(0)) {
+            require(validateTransfer(from, to), "Transfer failed");
+        }
+        return super._update(to, tokenId, auth);
     }
 
     // only owner

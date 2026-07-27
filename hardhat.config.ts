@@ -43,7 +43,7 @@ export default defineConfig({
   solidity: {
     compilers: [
       {
-        version: "0.8.3",
+        version: "0.8.24",
         settings: {
           optimizer: {
             enabled: true,
@@ -52,7 +52,7 @@ export default defineConfig({
         },
       },
       {
-        version: "0.8.12",
+        version: "0.8.28",
         settings: {
           optimizer: {
             enabled: true,
