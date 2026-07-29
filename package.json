@@ -66,6 +66,6 @@
     "typescript": "^7.0.0"
   },
   "dependencies": {
-    "hardhat-awesome-cli": "^0.1.0"
+    "hardhat-awesome-cli": "^0.7.0"
   }
 }
