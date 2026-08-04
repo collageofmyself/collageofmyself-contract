@@ -978,14 +978,14 @@
     "@nomicfoundation/edr-linux-x64-musl" "0.15.0"
     "@nomicfoundation/edr-win32-x64-msvc" "0.15.0"
 
-"@nomicfoundation/hardhat-errors@^3.0.13", "@nomicfoundation/hardhat-errors@^3.0.16":
+"@nomicfoundation/hardhat-errors@^3.0.13", "@nomicfoundation/hardhat-errors@^3.0.15", "@nomicfoundation/hardhat-errors@^3.0.16":
   version "3.0.18"
   resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-errors/-/hardhat-errors-3.0.18.tgz#994f844d495e812d77336974bc49ad03f2171581"
   integrity sha512-SK1GMQiV1r1/UbIU/2S13D1iueR8nYE6R+hK2AvJYCjvOCQGStK2oGHIPKVCdCK12yDZK0LE1OrCwxwcEvIu2w==
   dependencies:
     "@nomicfoundation/hardhat-utils" "^4.1.5"
 
-"@nomicfoundation/hardhat-errors@^3.0.15", "@nomicfoundation/hardhat-errors@^3.0.17":
+"@nomicfoundation/hardhat-errors@^3.0.17":
   version "3.0.17"
   resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-errors/-/hardhat-errors-3.0.17.tgz#4eeffb9504e674ff4b40707559963ee5c41702cb"
   integrity sha512-x8/Bv7Mn0a90ZRX4ZfWuq8uGuqF10LzLMXD1LD0kEIRBwSvr71fcxYyONcuf+MzznbrJ+WBTNz3ov9Rd++8DfQ==
@@ -1015,14 +1015,14 @@
     zod "^3.23.8"
 
 "@nomicfoundation/hardhat-mocha@^3.0.0":
-  version "3.0.21"
-  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-mocha/-/hardhat-mocha-3.0.21.tgz#5e140c67248f69c6239a3db3296d9696218b0c76"
-  integrity sha512-z2onvzLHEHTlSpv4+iuMjnlj7RVnaGrGXBpn3fuveE9MaTllnh/lOBGtCGbTmxjut1iL0giuPZtHuvtpbqstCg==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-mocha/-/hardhat-mocha-3.1.0.tgz#b0b81d37fac0e04961a5311866ad84f87d873467"
+  integrity sha512-bZgm1NWoVvwPdc2SQwjyj/HuFePG5LjS+zuLqqwwW8w5hq5+NIFZtgcOoTFNhShDFXeItLxOYiC2K2Pk/q2scw==
   dependencies:
     "@nomicfoundation/hardhat-errors" "^3.0.15"
     "@nomicfoundation/hardhat-utils" "^4.1.2"
     "@nomicfoundation/hardhat-zod-utils" "^3.0.5"
-    tsx "^4.19.3"
+    tsx "^4.23.1"
     zod "^3.23.8"
 
 "@nomicfoundation/hardhat-utils@^4.1.2", "@nomicfoundation/hardhat-utils@^4.1.4", "@nomicfoundation/hardhat-utils@^4.1.5":
@@ -5806,7 +5806,7 @@ tslib@^2.1.0, tslib@^2.3.1, tslib@^2.6.2:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
-tsx@^4.19.3, tsx@^4.23.1:
+tsx@^4.23.1:
   version "4.23.1"
   resolved "https://registry.yarnpkg.com/tsx/-/tsx-4.23.1.tgz#1703da002ee4432b9a053917431f91462fca235b"
   integrity sha512-GQHnkIfxyx1wYCOS/wonik5MVRZU9hi1TEZmzGZSCJB1y9YgoZ8H6itNE/u4suE+yLmOzuE4E5S4TZ/ZX2wcWQ==
