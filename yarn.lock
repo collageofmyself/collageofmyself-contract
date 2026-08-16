@@ -3686,10 +3686,10 @@ hardhat-gas-reporter@^2.0.0:
     sha1 "^1.1.1"
     viem "^2.27.0"
 
-hardhat@~3.12.0:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-3.12.0.tgz#7124ffb962082ba198d68fc72ee856865e8a209e"
-  integrity sha512-HY1BPWJ+Pq/RvGDcK8M0gwawNiJqrjfF0LOdHM+pYa9EDybG8O9hX1RP7fWchNLrA49D7A1Ax8LlRkQglWozzg==
+hardhat@~3.13.0:
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-3.13.0.tgz#46a2bd047c1d5d0ecc7064d7fb71a8680fe51c68"
+  integrity sha512-ERVBunuWWBTT3BNfZlozqGB0cSG84xi/P380wGNUxt+pl5e309ZVmNvXiwrMxZn4Ua4LJYW93yC1RnAtf7fLNw==
   dependencies:
     "@nomicfoundation/edr" "0.15.0"
     "@nomicfoundation/hardhat-errors" "^3.0.17"
