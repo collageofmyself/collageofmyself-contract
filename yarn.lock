@@ -1056,12 +1056,12 @@
     zod "^3.23.8"
 
 "@nomicfoundation/hardhat-mocha@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-mocha/-/hardhat-mocha-4.0.0.tgz#8ee3f3abcfcb1ca825cfe7ad653310bed265d35e"
-  integrity sha512-6DzaqKHcMjrtdNTljrW+annBn8UYtGNAoYwE4JvJJwyaL6mIc6go6uXWa5LqVs+eNyYx6ZK3dgJs5lAkSrFaTg==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-mocha/-/hardhat-mocha-4.0.1.tgz#39408b5674c1983b92fca0d8c0d67ee683913e98"
+  integrity sha512-KOskqrcIj83D/eHouegWFYpU5wlcLnwibJgvKn+Eq6anyPdY4G5oDhYbdGtn3Ic8rIdq3sj1shSD75rx9zi3kw==
   dependencies:
     "@nomicfoundation/hardhat-errors" "^3.1.0"
-    "@nomicfoundation/hardhat-utils" "^4.3.0"
+    "@nomicfoundation/hardhat-utils" "^5.0.0"
     "@nomicfoundation/hardhat-zod-utils" "^3.0.5"
     tsx "^4.23.1"
     zod "^3.23.8"
