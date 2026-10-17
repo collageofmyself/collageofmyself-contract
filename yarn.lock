@@ -1034,11 +1034,11 @@
     "@nomicfoundation/hardhat-utils" "^5.0.0"
 
 "@nomicfoundation/hardhat-ethers-chai-matchers@^3.0.0":
-  version "3.0.12"
-  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-ethers-chai-matchers/-/hardhat-ethers-chai-matchers-3.0.12.tgz#85a6d2c42f719b07749302f2b10421c54ba3a582"
-  integrity sha512-I0pgj1Xl3+c0GAfFn8Xf9KDr9TYn0bU5ud1CPZt04jVE3O8QCvBl2p/pGT3lRnPfk60mhICUb5nqn4/eeijadw==
+  version "3.0.13"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-ethers-chai-matchers/-/hardhat-ethers-chai-matchers-3.0.13.tgz#97b085c7cd4de9aa8142aadf2d5f4de2095a247b"
+  integrity sha512-1YS8M0dByQX6rKbEZj7m1N+zbPaIRw1FiurYPzJDBkTDFTUN+iywkG9S9GctxBQMJrhZLWkAcnJ4bkN45fHRJA==
   dependencies:
-    "@nomicfoundation/hardhat-utils" "^4.3.0"
+    "@nomicfoundation/hardhat-utils" "^5.0.0"
     "@types/chai-as-promised" "^8.0.1"
     chai-as-promised "^8.0.0"
     deep-eql "^5.0.1"
