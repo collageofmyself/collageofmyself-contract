@@ -1489,9 +1489,11 @@
   integrity sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==
 
 "@types/figlet@^1.5.4":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@types/figlet/-/figlet-1.7.0.tgz#f3bc4e47ebebacc93223211bb61245bc72598254"
-  integrity sha512-KwrT7p/8Eo3Op/HBSIwGXOsTZKYiM9NpWRBJ5sVjWP/SmlS+oxxRvJht/FNAtliJvja44N3ul1yATgohnVBV0Q==
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@types/figlet/-/figlet-1.12.0.tgz#93815add81d19f318cfcf61ff606afaf704e87ff"
+  integrity sha512-tPv140QqwGL4Jot2fzTxC6Oy8BVdHEZe4SJDlRuRkywfksv8kMCbTYvtuN9mJCm41HlgRhwb5rRaiH6FE5Hm9g==
+  dependencies:
+    figlet "*"
 
 "@types/glob@^7.1.1":
   version "7.2.0"
@@ -2491,6 +2493,11 @@ commander@^10.0.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-10.0.1.tgz#881ee46b4f77d1c1dccc5823433aa39b022cbe06"
   integrity sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==
 
+commander@^14.0.0:
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-14.0.3.tgz#425d79b48f9af82fcd9e4fc1ea8af6c5ec07bbc2"
+  integrity sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==
+
 compare-versions@^6.0.0:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-6.1.1.tgz#7af3cc1099ba37d244b3145a9af5201b629148a9"
@@ -3326,6 +3333,13 @@ fdir@^6.5.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
   integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
+
+figlet@*:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/figlet/-/figlet-1.12.0.tgz#3e9c3a12f112db9479bd5ae4b87bc2b337b9a1af"
+  integrity sha512-Ith3WsUi0N/EqGt+0/F6XnWhT04sohhH2tT0Dq7GdUmWbMTIoCbg2Jq9qKggmTO62ST5kRCfB311EmIMbizGyA==
+  dependencies:
+    commander "^14.0.0"
 
 "file-entry-cache@11.1.5 || >11.1.6 <12":
   version "11.1.5"
