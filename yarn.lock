@@ -1057,12 +1057,12 @@
     deep-eql "^5.0.1"
 
 "@nomicfoundation/hardhat-ethers@^4.0.0":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-ethers/-/hardhat-ethers-4.2.2.tgz#65dbbdfdcf4362788c7439d80165218234f6946e"
-  integrity sha512-gag6y9TBEzmHsSlNbsTD/brlJVrodiBHxNctZj1peKUURTOaW/QP3wGyrpGWJMQrWDKc3b+d7Vdb/3aFuJuK2w==
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-ethers/-/hardhat-ethers-4.2.3.tgz#8f6501fbcb7d5b137507f074394e563b606dda9e"
+  integrity sha512-NQBrYG96aleg4qkW37hRjsMFPKXnG8lV5iLmeDzBRR7d1G1e9Be2sjHWKtpK9AyEQCsb/FIHoVF/6wEuNmaghQ==
   dependencies:
     "@nomicfoundation/hardhat-errors" "^3.1.0"
-    "@nomicfoundation/hardhat-utils" "^5.0.0"
+    "@nomicfoundation/hardhat-utils" "^5.2.0"
     "@nomicfoundation/hardhat-zod-utils" "^3.0.5"
     ethereum-cryptography "^3.0.0"
     ethers "^6.14.0"
@@ -1079,10 +1079,24 @@
     tsx "^4.23.1"
     zod "^3.23.8"
 
-"@nomicfoundation/hardhat-utils@^5.0.0", "@nomicfoundation/hardhat-utils@^5.1.0", "@nomicfoundation/hardhat-utils@^5.1.1":
+"@nomicfoundation/hardhat-utils@^5.0.0":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-utils/-/hardhat-utils-5.1.2.tgz#e6e779bef7a421b4539ac85cb3d51fc0d094cbcc"
   integrity sha512-KA1s8zKGjf0YLQ5fK070NdzsJ4XGYYYcUW6zaugmSfjgmYxISXjbCWNHWryGz0EgJzU65UH6n3G2tNgKE+lGJQ==
+  dependencies:
+    "@streamparser/json-node" "^0.0.26"
+    env-paths "^4.0.0"
+    ethereum-cryptography "^3.0.0"
+    fast-equals "^6.0.0"
+    json-stream-stringify "^3.1.7"
+    micro-eth-signer "^0.19.0"
+    rfdc "^1.3.1"
+    undici "^7.29.0"
+
+"@nomicfoundation/hardhat-utils@^5.1.0", "@nomicfoundation/hardhat-utils@^5.1.1", "@nomicfoundation/hardhat-utils@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/hardhat-utils/-/hardhat-utils-5.2.0.tgz#8573780446d3f666873f794c7605a73efee88455"
+  integrity sha512-wxKp41UoY2B807XdE4GLGRE1YBU+fYrfLth8AyMCkNa31S9WW46ChZmhYPpwa6vWZSKirjnLa9wOXY2q5SmO2Q==
   dependencies:
     "@streamparser/json-node" "^0.0.26"
     env-paths "^4.0.0"
@@ -3285,9 +3299,9 @@ fast-diff@^1.1.2, fast-diff@^1.2.0:
   integrity sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==
 
 fast-equals@^6.0.0:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-6.2.2.tgz#c98d89a2b1372e4b00df325ad0f3cb3221a26bed"
-  integrity sha512-n+XqoarWCgcar0O3om3DeNYx6xTuLWGTUF1bRZ9iuO00tsPepzP1L4V7rqtxxZ4PEya34UCESReimFvxmEVwIA==
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-6.4.1.tgz#9a649a0e884197163b03ad95d353d72c9e95af47"
+  integrity sha512-qHLxdeRmasP83VXLGXCyUh7D2bo2WFI/IEB+T0WSf3mwuTD2A5F+HQQmeF+UXCfuLPmqUNYcFJjwAN9JabA6+Q==
 
 fast-glob@^3.0.3:
   version "3.3.3"
