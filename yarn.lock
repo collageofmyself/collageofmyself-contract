@@ -239,15 +239,71 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.29.7.tgz#bd87084ced0c796ec46bda492de6e83d29e89fc2"
   integrity sha512-qehxGkRj55h/ff8EMaJ+cYhyaKlHIxqYDn682wQD7RNp9UujOQsHog2uS0r2vzr4pW+sXf90NeeayjcNaX3fFg==
 
+"@bytecodealliance/jco-node-fs-darwin-arm64@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-darwin-arm64/-/jco-node-fs-darwin-arm64-0.3.2.tgz#656575dd8be0e2f6a4dc0f8b67f8ed3aef14405f"
+  integrity sha512-WXQq1tRVUWhbK+ImH0G8Kni2AR0sdokLf/KyXRw5P6n4A9ZbgMHOuPfN/PEsYgw4eosuTAonutK0xILk/hA81A==
+
+"@bytecodealliance/jco-node-fs-darwin-x64@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-darwin-x64/-/jco-node-fs-darwin-x64-0.3.2.tgz#619098baa930caf8ded7c7ced570b8fb7ac9f2ca"
+  integrity sha512-Fy/OjHnto7hNE5ksewVkmAMXG/uXyj+RAKFZWQFTzFkp73UyT5vuPjKq3nvx9KolUGWBG37BudEMb4ZAoD9TbQ==
+
+"@bytecodealliance/jco-node-fs-linux-arm64-gnu@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-linux-arm64-gnu/-/jco-node-fs-linux-arm64-gnu-0.3.2.tgz#f4ce0286125614d9ff6f546ea8e2a7783d7aa9c2"
+  integrity sha512-OafRtRu3tfOFQARfkia/LDEqSo2R3yAL1xPwzf4RcRW6JqkOY7qKWsUS5+LPVo/aFaSkMX7F7bdFGpFPmcoZJg==
+
+"@bytecodealliance/jco-node-fs-linux-arm64-musl@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-linux-arm64-musl/-/jco-node-fs-linux-arm64-musl-0.3.2.tgz#01f2918cb3a237efe00d1b8646dd35edf006b226"
+  integrity sha512-JblDiwD7+Y+w0d/tjaNDX4QdGvh5lyuDc+S/jDeT7sYA1caA9yiwIjLa8PC/lm2xudqSxD+Cuy4AosXvl+qI0g==
+
+"@bytecodealliance/jco-node-fs-linux-x64-gnu@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-linux-x64-gnu/-/jco-node-fs-linux-x64-gnu-0.3.2.tgz#6ba26d7e7730fd78c0ea4a67e2569982b38f41e0"
+  integrity sha512-6FzmHoLOsa6b4X9AuFLsvlpNF66Dt4sRRftZHaT1I1pYzCWrJkkpgNJhRXxf67ZPmOwBZJT4dan/g752Rx4xRw==
+
+"@bytecodealliance/jco-node-fs-linux-x64-musl@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-linux-x64-musl/-/jco-node-fs-linux-x64-musl-0.3.2.tgz#61376d37ecfed4a6000265d80ad4cbbd91a89295"
+  integrity sha512-SbAJG2PDV8YAHBESHU9sVSckOitJyvlezdF4CGP5/mOp01JnijVkLVXzGK62yVSfa5TpAybbSd1rk+v36NAW/Q==
+
+"@bytecodealliance/jco-node-fs-win32-arm64-msvc@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-win32-arm64-msvc/-/jco-node-fs-win32-arm64-msvc-0.3.2.tgz#456e9d26c762298450760a3ae6c8c0b60b703ad5"
+  integrity sha512-nUWYdFysRQJGsIOCk0KAYN2smkNYiHG7rZ7m+0ZXqP+5wqWxKEjkDsORwXiBjdaWFLVww0anZ3SBxrju6P7hXQ==
+
+"@bytecodealliance/jco-node-fs-win32-x64-msvc@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs-win32-x64-msvc/-/jco-node-fs-win32-x64-msvc-0.3.2.tgz#b7f317d11a7d402f6d345444abd5f7ca1fe2de65"
+  integrity sha512-RsPj2t8TvltsMWK7/Z7JcVC/IWPMi07/AJkNLiNTCuGTdT/sseqTThJJwhuz3sjFw7dJdxA+bSGT+23y/KT0fw==
+
+"@bytecodealliance/jco-node-fs@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/jco-node-fs/-/jco-node-fs-0.3.2.tgz#bc0fc7cf81aa7c6fc1c1b1fc9eb8c4fec8862895"
+  integrity sha512-yxvqQreNcOQdMsEKZomkSqThtkxrAz3f1Cmy8BsV0UHi9saa2/D1KDB14IAXPYwDq/maS6lCzS+MuMQx6QkUgA==
+  optionalDependencies:
+    "@bytecodealliance/jco-node-fs-darwin-arm64" "0.3.2"
+    "@bytecodealliance/jco-node-fs-darwin-x64" "0.3.2"
+    "@bytecodealliance/jco-node-fs-linux-arm64-gnu" "0.3.2"
+    "@bytecodealliance/jco-node-fs-linux-arm64-musl" "0.3.2"
+    "@bytecodealliance/jco-node-fs-linux-x64-gnu" "0.3.2"
+    "@bytecodealliance/jco-node-fs-linux-x64-musl" "0.3.2"
+    "@bytecodealliance/jco-node-fs-win32-arm64-msvc" "0.3.2"
+    "@bytecodealliance/jco-node-fs-win32-x64-msvc" "0.3.2"
+
 "@bytecodealliance/preview2-shim@0.17.0":
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/@bytecodealliance/preview2-shim/-/preview2-shim-0.17.0.tgz#9bc1cadbb9f86c446c6f579d3431c08a06a6672e"
   integrity sha512-JorcEwe4ud0x5BS/Ar2aQWOQoFzjq/7jcnxYXCvSMh0oRm0dQXzOA+hqLDBnOMks1LLBA7dmiLLsEBl09Yd6iQ==
 
-"@bytecodealliance/preview2-shim@^0.19.0":
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/@bytecodealliance/preview2-shim/-/preview2-shim-0.19.0.tgz#cc8d10ed1b9011191d3eb43ad0d9a302ae637627"
-  integrity sha512-OSUlcM62fXLuzYP0DjBn/SwjKMZ/y/2PMXZ8v5cRiiFcroauntlPRl/oCnx0xYjYiqdYvE0PY50VCNutll0xOw==
+"@bytecodealliance/preview2-shim@^0.30.0":
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/@bytecodealliance/preview2-shim/-/preview2-shim-0.30.0.tgz#f1216c5f155aa3124b9421ca7bf7a9a23c5f7720"
+  integrity sha512-Op+uxOJPCnW4jp5Jg3kJvFpB5GZGJGxBMX5PvMffksyonpTciILDDSSJQr1ficHAhm1H6X5+Qwx3q21p7Hjr1Q==
+  dependencies:
+    "@bytecodealliance/jco-node-fs" "0.3.2"
 
 "@cacheable/memory@^2.2.0":
   version "2.2.0"
@@ -1117,12 +1173,12 @@
     "@nomicfoundation/hardhat-errors" "^3.0.13"
     "@nomicfoundation/hardhat-utils" "^5.1.1"
 
-"@nomicfoundation/slang@1.3.8":
-  version "1.3.8"
-  resolved "https://registry.yarnpkg.com/@nomicfoundation/slang/-/slang-1.3.8.tgz#9e789c11a67827099c695e1105c809a18cd1231e"
-  integrity sha512-it0o2vGb56kqOEUiIreLTqEwiWitWDDOiUCWCO3PfzBXD3kkIFLQ3Ly/4xNgCo0LF5xqGECr+DcCNbfspSClPA==
+"@nomicfoundation/slang@1.3.10":
+  version "1.3.10"
+  resolved "https://registry.yarnpkg.com/@nomicfoundation/slang/-/slang-1.3.10.tgz#439b08c056ced6ceff29cd1d1c4d54172662946b"
+  integrity sha512-yW7qD/A9OJ+lANGTs0WaKTe2gZW+ZAFAS0kmEPiUSfzqqvuHoqJdWp/8Laa2xgeTXxBytWxTC9ypPKoIBi168g==
   dependencies:
-    "@bytecodealliance/preview2-shim" "^0.19.0"
+    "@bytecodealliance/preview2-shim" "^0.30.0"
 
 "@nomicfoundation/slang@^0.18.3":
   version "0.18.3"
@@ -5064,13 +5120,13 @@ prettier-linter-helpers@^1.0.1:
     fast-diff "^1.1.2"
 
 prettier-plugin-solidity@^2.0.0:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-solidity/-/prettier-plugin-solidity-2.4.1.tgz#3f5b3be179c395f523698d9011ba321dd6ff747c"
-  integrity sha512-12w85zZt9gXgGvLW7nK4h+U6sLY8qa688E+tFDP0Oic9zuM5TSQcWQdcE/RP3dLBuBAbA5yUl6lgXmSnjuRsGA==
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-solidity/-/prettier-plugin-solidity-2.5.0.tgz#86afc300473f53efd3ece0b0f7c76903061215d2"
+  integrity sha512-ULFyU1O0DB3TiHTaj14qKoVOprXqnw3uhBDKprCHQkxf/h/gb8poBBj41Qf7Fi5abxBwrFahjJ3jg/3uCanN2w==
   dependencies:
-    "@nomicfoundation/slang" "1.3.8"
+    "@nomicfoundation/slang" "1.3.10"
     "@solidity-parser/parser" "^0.20.2"
-    semver "^7.8.5"
+    semver "^7.8.6"
 
 prettier@^2.3.1:
   version "2.8.8"
@@ -5441,7 +5497,7 @@ semver@^7.3.4, semver@^7.3.7, semver@^7.5.2, semver@^7.8.5:
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.5.tgz#39b646037dd50c14fb451e7e4cac58ed8b863f69"
   integrity sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==
 
-semver@^7.5.4, semver@^7.6.3, semver@^7.7.3:
+semver@^7.5.4, semver@^7.6.3, semver@^7.7.3, semver@^7.8.6:
   version "7.8.6"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.6.tgz#67c0cda133a3ceb6f70b803e67625bf969000424"
   integrity sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw==
